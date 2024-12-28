@@ -1,0 +1,24 @@
+{
+	"devDependencies": {
+		"@commitlint/cli": "^19.6.0",
+		"@commitlint/config-conventional": "^19.6.0",
+		"@commitlint/config-pnpm-scopes": "^19.5.0",
+		"@stylistic/eslint-plugin": "^2.11.0",
+		"eslint": "9",
+		"husky": "^9.1.7",
+		"lint-staged": "^15.2.10",
+		"typescript": "5.4.5",
+		"typescript-eslint": "^8.16.0"
+	},
+	"scripts": {
+		"prepare": "husky"
+	},
+	"lint-staged": {
+		"./packages/dapp/src/**/*.{js,ts,tsx}": [
+			"eslint --fix"
+		],
+		"./packages/design-system/src/**/*.{js,ts,tsx}": [
+			"eslint --fix"
+		]
+	}
+}
