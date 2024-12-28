@@ -7,11 +7,14 @@
 		"eslint": "9",
 		"husky": "^9.1.7",
 		"lint-staged": "^15.2.10",
+		"tsup": "^8.3.5",
 		"typescript": "5.4.5",
 		"typescript-eslint": "^8.16.0"
 	},
 	"scripts": {
-		"prepare": "husky"
+		"prepare": "husky",
+		"dev": "pnpm --parallel --filter=./packages/** dev",
+		"build": "pnpm --parallel --filter=./packages/** build"
 	},
 	"lint-staged": {
 		"./packages/dapp/src/**/*.{js,ts,tsx}": [

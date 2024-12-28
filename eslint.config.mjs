@@ -25,7 +25,6 @@ export default tseslint.config({
   extends: [
     js.configs.recommended, 
     ...tseslint.configs.recommended,
-    reatom.configs.recommended
   ],
   files: [
     'packages/core/src/**/*.{ts,tsx}',
@@ -40,6 +39,5 @@ export default tseslint.config({
   },
   rules: {
     ...stylisticConfigRules,
-    ...reactHooks.configs.recommended.rules
   },
 })
