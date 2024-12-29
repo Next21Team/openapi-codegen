@@ -44,6 +44,16 @@ importers:
       '@oas-codegen/core':
         specifier: workspace:*
         version: link:../core
+      change-case:
+        specifier: ^5.4.4
+        version: 5.4.4
+      squirrelly:
+        specifier: ^9.1.0
+        version: 9.1.0
+    devDependencies:
+      '@scalar/openapi-types':
+        specifier: ^0.1.5
+        version: 0.1.5
 
   packages/cli:
     dependencies:
@@ -75,6 +85,9 @@ importers:
       tsx:
         specifier: ^4.19.2
         version: 4.19.2
+      zod:
+        specifier: ^3.24.1
+        version: 3.24.1
     devDependencies:
       '@scalar/openapi-types':
         specifier: ^0.1.5
@@ -852,6 +865,9 @@ packages:
     resolution: {integrity: sha512-zgVZuo2WcZgfUEmsn6eO3kINexW8RAE4maiQ8QNs8CtpPCSyMiYsULR3HQYkm3w8FIA3SberyMJMSldGsW+U3w==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
 
+  change-case@5.4.4:
+    resolution: {integrity: sha512-HRQyTk2/YPEkt9TnUPbOpr64Uw3KOicFWPVBb+xiHvd6eBx/qPr9xqfBFDT8P2vWsvvz4jbEkfDe71W3VyNu2w==}
+
   chokidar@4.0.3:
     resolution: {integrity: sha512-Qgzu8kfBvo+cA4962jnP1KkS6Dop5NS6g7R5LFYJr4b8Ub94PPQXUksCw9PvXoeXPRRddRNC5C1JQUR2SMGtnA==}
     engines: {node: '>= 14.16.0'}
@@ -1600,6 +1616,10 @@ packages:
   split2@4.2.0:
     resolution: {integrity: sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==}
     engines: {node: '>= 10.x'}
+
+  squirrelly@9.1.0:
+    resolution: {integrity: sha512-kvjFqb7qzC4gX4lkqSaU8QPvUHhDLMiDpxpz7a66vjTH0JtjLJqAXbPrc7ST61EefuuuW05sne2rjGskunrF2A==}
+    engines: {node: '>=6.0.0'}
 
   string-argv@0.3.2:
     resolution: {integrity: sha512-aqD2Q0144Z+/RqG52NeHEkZauTAUWJO8c6yTftGJKO3Tja5tUgIfmIl6kExvhtxSDP7fXB6DvzkfMpCd/F3G+Q==}
@@ -2471,6 +2491,8 @@ snapshots:
 
   chalk@5.4.1: {}
 
+  change-case@5.4.4: {}
+
   chokidar@4.0.3:
     dependencies:
       readdirp: 4.0.2
@@ -3194,6 +3216,8 @@ snapshots:
       whatwg-url: 7.1.0
 
   split2@4.2.0: {}
+
+  squirrelly@9.1.0: {}
 
   string-argv@0.3.2: {}
 

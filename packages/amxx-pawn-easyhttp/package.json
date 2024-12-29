@@ -10,7 +10,9 @@
 		"dev": "pnpm build-fast --watch src"
 	},
 	"dependencies": {
-		"@oas-codegen/core": "workspace:*"
+		"@oas-codegen/core": "workspace:*",
+		"change-case": "^5.4.4",
+		"squirrelly": "^9.1.0"
 	},
 	"files": [
 		"dist"
@@ -28,5 +30,8 @@
 				"default": "./dist/index.mjs"
 			}
 		}
+	},
+	"devDependencies": {
+		"@scalar/openapi-types": "^0.1.5"
 	}
 }

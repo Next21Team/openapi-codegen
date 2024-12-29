@@ -10,7 +10,8 @@
   "scripts": {
     "build": "tsup-node src --format=esm --dts --no-splitting --shims",
     "build-fast": "tsup-node src --format=esm --no-dts --no-splitting --shims",
-    "dev": "pnpm build-fast --watch src"
+    "dev": "pnpm build-fast --watch src",
+    "cli": "node bin.mjs"
   },
   "dependencies": {
     "@oas-codegen/amxx-pawn-easyhttp": "workspace:*",

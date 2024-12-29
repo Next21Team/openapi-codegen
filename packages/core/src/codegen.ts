@@ -1,6 +1,8 @@
+import { z } from 'zod';
 import { invariant } from './lib/invariant';
-import { type AnyApiDefinitionFormat, dereference } from '@scalar/openapi-parser';
-import type { CodegenApi, LanguageAdapter } from './language-adapter';
+import { type AnyApiDefinitionFormat, type AnyObject, dereference } from '@scalar/openapi-parser';
+import { componentTypes, type CodegenApi, type ComponentReference, type LanguageAdapter } from './language-adapter';
+import type { OpenAPIV3 } from '@scalar/openapi-types';
 
 export interface ProduceConfig {
 	input: AnyApiDefinitionFormat;
@@ -13,7 +15,31 @@ export type ProduceReturn = {
 }[];
 
 export async function produce({ input, languageAdapter }: ProduceConfig): Promise<ProduceReturn> {
-	const result = await dereference(input);
+	const resolvedSchemas = new Map<AnyObject, ComponentReference>();
+
+	const result = await dereference(input, {
+		onDereference({ ref, schema }) {
+			if (!ref.startsWith('#/components'))
+				return;
+
+			const rawCategory = ref.split('/').at(-2);
+			if (!rawCategory)
+				return;
+
+			const type = z.enum(componentTypes).parse(rawCategory);
+			const name = ref.split('/').at(-1);
+
+			const componentReference = {
+				$ref: ref,
+				name,
+				type,
+				value: schema,
+			} as ComponentReference;
+
+			resolvedSchemas.set(schema, componentReference);
+		},
+	});
+
 	invariant(
 		!result.errors?.length && result.schema,
 		`Failed to parse OpenAPI file: ${result?.errors?.map(e => e.message).join('\n')}`,
@@ -22,9 +48,12 @@ export async function produce({ input, languageAdapter }: ProduceConfig): Promis
 	const addedFiles = new Map<string, string>();
 
 	const codegenApi: CodegenApi = {
-		document: result.schema,
+		document: result.schema as OpenAPIV3.Document,
 		addFile: (path: string, content: string) => {
 			addedFiles.set(path, content);
+		},
+		checkReference: (obj) => {
+			return resolvedSchemas.get(obj) ?? null;
 		},
 	};
 
