@@ -12,7 +12,8 @@
 	"dependencies": {
 		"@oas-codegen/core": "workspace:*",
 		"change-case": "^5.4.4",
-		"squirrelly": "^9.1.0"
+		"squirrelly": "^9.1.0",
+		"ts-pattern": "^5.6.0"
 	},
 	"files": [
 		"dist"

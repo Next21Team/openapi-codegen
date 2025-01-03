@@ -1,14 +1,16 @@
-import type { CodegenApi, LanguageAdapter } from '@oas-codegen/core';
+import type { LanguageAdapter } from '@oas-codegen/core';
 import { generateSchema } from './components/schema/generate';
 import { template } from './sqrl';
 import { fileTemplate } from './file-template';
+import { createContext, type Context } from './context';
 
 export const languageAdapter: LanguageAdapter = {
 	async generateFiles(api) {
-		const { document, ...codegen } = api;
+		const codegen = api;
+		const ctx = createContext(api);
 
 		const sources = [
-			...generateDefinedSchemas(api),
+			...generateDefinedSchemas(ctx),
 		];
 
 		codegen.addFile(
@@ -20,12 +22,12 @@ export const languageAdapter: LanguageAdapter = {
 	},
 };
 
-function generateDefinedSchemas(api: CodegenApi) {
-	const { document } = api;
+function generateDefinedSchemas(ctx: Context) {
+	const { document } = ctx;
 	if (!document?.components?.schemas)
 		return [];
 
 	return Object.entries(document.components.schemas).map(
-		([name, schema]) => generateSchema(api, { name, schema }),
+		([name, schema]) => generateSchema(ctx, { name, schema }),
 	);
 }

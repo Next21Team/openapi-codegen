@@ -1,27 +1,26 @@
-import type { CodegenApi } from '@oas-codegen/core';
+import type { Context } from '~/context';
 import type { OpenAPIV3 } from '@scalar/openapi-types';
-import { schemaObjDecl } from './templates';
-import { camelCase, pascalCase, snakeCase } from 'change-case';
+import { match } from 'ts-pattern';
+import { objSchemaDecl } from './templates/object';
 
 interface GenerateSchemaArgs {
 	name: string;
 	schema: OpenAPIV3.SchemaObject;
 }
 
-export function generateSchema(codegen: CodegenApi, { name, schema }: GenerateSchemaArgs) {
-	const args = schema.properties
-		? Object.entries(schema.properties)
-				.map(([key, obj]) => resolveArgumentByObjProperty(key, obj))
-				.map(arg => `${arg.tag ? `${arg.tag}:` : ''}${arg.name}`)
-		: [];
+export function generateSchema(ctx: Context, { name, schema }: GenerateSchemaArgs) {
+	const { args, serviceArgs, code } = resolveSchema(ctx, schema, name);
+	const strArgLines = args
+		.map(arg => `${arg.tag !== '_' ? `${arg.tag}:` : ''}${arg.name}`)
+		.concat(serviceArgs ?? []);
 
-	const argsLineLen = args.reduce((acc, line) => acc + line.length, 0);
+	const strArgLinesLen = strArgLines.reduce((acc, line) => acc + line.length, 0);
 
-	return schemaObjDecl({
-		tag: pascalCase(name),
-		name: `create_${snakeCase(name)}_schema`,
-		arguments: argsLineLen > 80 ? `\n\t${args.join(',\n\t')}\n` : args.join(', '),
-		code: 'server_print("hello world!");',
+	return objSchemaDecl({
+		tag: ctx.toTagStr(name),
+		name: ctx.toFuncDeclStr(`create_${name}_schema`),
+		arguments: strArgLinesLen > 80 ? `\n\t${strArgLines.join(',\n\t')}\n` : strArgLines.join(', '),
+		code,
 		...schema,
 	});
 }
@@ -32,21 +31,65 @@ interface Argument {
 	description?: string;
 }
 
-function resolveArgumentByObjProperty(key: string, property: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject): Argument {
-	return {
-		tag: resolveArgumentTag(property?.type ?? ''),
-		name: camelCase(key),
-		description: property?.description,
-	};
+interface ResolveSchemaReturn {
+	args: Argument[];
+	serviceArgs?: string[];
+	code: string;
 }
 
-function resolveArgumentTag(type: string) {
-	switch (type) {
-		case 'integer': return '';
-		case 'number': return 'Float';
-		case 'string': return 'String';
-		case 'boolean': return 'bool';
-		case 'array': return 'Arr';
-		default: return 'Unknown';
-	}
+function resolveSchema(ctx: Context, schema: OpenAPIV3.SchemaObject, name: string): ResolveSchemaReturn {
+	return match(schema.type)
+		.with('integer', () => ({
+			args: [{ tag: '_', name: 'value', description: schema.description }],
+			code: `return ${ctx.toTagStr(name)}:value;`,
+		}))
+		.with('number', () => ({
+			args: [{ tag: 'Float', name: 'value', description: schema.description }],
+			code: `return ${ctx.toTagStr(name)}:value;`,
+		}))
+		.with('boolean', () => ({
+			args: [{ tag: 'bool', name: 'value', description: schema.description }],
+			code: `return ${ctx.toTagStr(name)}:value;`,
+		}))
+		.with('string', () => ({
+			args: [{ tag: 'Float', name: 'value[]', description: schema.description }],
+			code: `return ${ctx.toTagStr(name)}:ezjson_init_string(value);`,
+		}))
+		.with('array', () => ({
+			args: [],
+			code: `return ${ctx.toTagStr(name)}:ezjson_init_array();`,
+		}))
+		.with('object', () => {
+			if (!schema.properties) {
+				return {
+					args: [],
+					code: `return ${ctx.toTagStr(name)}:ezjson_init_object();`,
+				};
+			}
+
+			const args: Argument[] = [];
+			const serviceArgs: string[] = [];
+			const lines: string[] = [];
+
+			for (const [key, prop] of Object.entries(schema.properties)) {
+				const reference = ctx.checkReference(schema);
+				if (reference) {
+					args.push({
+						tag: ctx.toTagStr(reference.name),
+						name: ctx.toArgStr(key),
+						description: prop.description,
+					});
+				}
+			}
+
+			return {
+				args,
+				serviceArgs,
+				code: `EzJSON:root = ezjson_init_object();\n${lines.join('\n')}\nreturn ${ctx.toTagStr(name)}:root;`,
+			};
+		})
+		.otherwise(() => ({
+			args: [],
+			code: '// no implementation',
+		}));
 }
