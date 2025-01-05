@@ -5,6 +5,7 @@ import { componentTypes, type CodegenApi, type ComponentReference, type Language
 import type { OpenAPIV3 } from '@scalar/openapi-types';
 
 export interface ProduceConfig {
+	documentName: string;
 	input: AnyApiDefinitionFormat;
 	languageAdapter: LanguageAdapter;
 }
@@ -14,7 +15,7 @@ export type ProduceReturn = {
 	content: string;
 }[];
 
-export async function produce({ input, languageAdapter }: ProduceConfig): Promise<ProduceReturn> {
+export async function produce({ documentName, input, languageAdapter }: ProduceConfig): Promise<ProduceReturn> {
 	const resolvedSchemas = new Map<AnyObject, ComponentReference>();
 
 	const result = await dereference(input, {
@@ -48,6 +49,7 @@ export async function produce({ input, languageAdapter }: ProduceConfig): Promis
 	const addedFiles = new Map<string, string>();
 
 	const codegenApi: CodegenApi = {
+		documentName,
 		document: result.schema as OpenAPIV3.Document,
 		addFile: (path: string, content: string) => {
 			addedFiles.set(path, content);

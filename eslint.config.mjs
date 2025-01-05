@@ -27,9 +27,9 @@ export default tseslint.config({
     ...tseslint.configs.recommended,
   ],
   files: [
-    'packages/core/src/**/*.{ts,tsx}',
-    'packages/cli-page/src/**/*.{ts,tsx}',
-    'packages/amxx-pawn-easyhttp/src/**/*.{ts,tsx}',
+    'packages/core/src/**/*.ts',
+    'packages/cli/src/**/*.ts',
+    'packages/amxx-pawn-easyhttp/src/**/*.ts',
   ],
   languageOptions: {
     ecmaVersion: 2020

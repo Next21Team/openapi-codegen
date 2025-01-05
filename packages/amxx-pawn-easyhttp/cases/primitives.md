@@ -62,26 +62,32 @@
 		SomeMixed:
 			nullable: true
 			oneOf:
+				- type: number
 				- type: boolean
 				- type: string
 ### GENERATED OUTPUT:
 	#define __END __1 = tagof(value)
 
-	SomeMixed:some_mixed_init({Null, Boolean, String}:value, __END) { 
+	SomeMixed:some_mixed_init({Null, Number, Boolean, String}:value, __END) { 
 		if(__1 == tagof(Null:))
 			return SomeMixed:ezjson_init_null();
 
-		if(__1 == tagof(Boolean:))
-			return SomeMixed:ezjson_init_bool();
-
-		if(__1 == tagof(String:))
-			return SomeMixed:ezjson_init_string();
+		return SomeMixed:ezjson_deep_copy(EzJSON:value);
 	}
 
 	#undef __END
 
 	bool:some_mixed_is_null(SomeMixed:var) {
 		return ezjson_is_null(EzJSON:var)
+	}
+
+	bool:some_mixed_is_number(SomeMixed:var, &value = 0, &Float:floatValue = 0.0) {
+		if(!ezjson_is_number(EzJSON:var))
+			return false;
+
+		value = ezjson_get_number(EzJSON:var);
+		floatValue = ezjson_get_real(EzJSON:var);
+		return true;
 	}
 
 	bool:some_mixed_is_boolean(SomeMixed:var, &bool:value) {
@@ -122,7 +128,7 @@
 
 ## SAMPLE (IMPOSSIBLE ALLOF TYPE)
 	schemas:
-		SomeInteger:
+		ImpossibleAllof:
 			nullable: true
 			allOf:
 				- type: boolean
@@ -130,6 +136,6 @@
 ### GENERATED OUTPUT:
 	#define __END __1 = tagof(value)
 
-	SomeInteger:some_integer_init(any:value, __END) { ... }
+	ImpossibleAllof:some_integer_init(any:value, __END) { ... }
 
 	#undef __END

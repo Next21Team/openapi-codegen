@@ -50,6 +50,7 @@ export type ComponentReference = {
 });
 
 export interface CodegenApi {
+	documentName: string;
 	document: OpenAPIV3.Document;
 	addFile: (path: string, content: string) => void;
 	checkReference: (obj: AnyObject) => ComponentReference | null;

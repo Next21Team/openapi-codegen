@@ -1,4 +1,4 @@
-export const fileTemplate = `/*
+const logo = `/*
 
      ________  ________  ________           ________  _______   ________      
     |\\   __  \\|\\   __  \\|\\   ____\\         |\\   ____\\|\\  ___ \\ |\\   ___  \\    
@@ -14,9 +14,22 @@ export const fileTemplate = `/*
                         ALL YOUR CHANGES CAN BE OVERWRITTEN.                     
 
 */
+`
 
-#include <amxmodx>
-#include <easyhttp>
+export const Document: JSXTE.Component<{ name: string }> = ({ children, name }) => {
+     return (
+          <>
+               {logo}
 
-{{ it.body }}
-`;
+               #if defined _{name}_included
+               #endinput
+               #endif
+               #define _{name}_included
+
+               {'#include <amxmodx>'}
+               {'#include <easyhttp>'}
+
+               {children}
+          </>
+     )
+}
