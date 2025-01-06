@@ -1,12 +1,7 @@
 import { Function, type FunctionProps } from '~/syntax/function';
 
-export const BaseSchema: JSXTE.Component<FunctionProps> = ({ children, ...props }) => {
+export const BaseSchema: JSXTE.Component<FunctionProps> = (props) => {
 	return (
-		<Function 
-			stock
-			{...props}
-		>
-			{children}
-		</Function>
+		<Function stock {...props} />
 	);
-}
+};

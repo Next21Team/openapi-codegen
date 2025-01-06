@@ -4,39 +4,102 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    '@commitlint/cli':
+      specifier: ^19.6.0
+      version: 19.6.1
+    '@commitlint/config-conventional':
+      specifier: ^19.6.0
+      version: 19.6.0
+    '@commitlint/config-pnpm-scopes':
+      specifier: ^19.5.0
+      version: 19.5.0
+    '@scalar/openapi-parser':
+      specifier: ^0.10.2
+      version: 0.10.2
+    '@scalar/openapi-types':
+      specifier: ^0.1.5
+      version: 0.1.5
+    '@stylistic/eslint-plugin':
+      specifier: ^2.11.0
+      version: 2.12.1
+    '@types/node':
+      specifier: ^22.10.2
+      version: 22.10.2
+    allof-merge:
+      specifier: ^0.6.6
+      version: 0.6.6
+    change-case:
+      specifier: ^5.4.4
+      version: 5.4.4
+    commander:
+      specifier: ^12.1.0
+      version: 12.1.0
+    eslint:
+      specifier: ^9.0.0
+      version: 9.17.0
+    husky:
+      specifier: ^9.1.7
+      version: 9.1.7
+    jsxte:
+      specifier: ^3.3.1
+      version: 3.3.1
+    lint-staged:
+      specifier: ^15.2.10
+      version: 15.3.0
+    ts-pattern:
+      specifier: ^5.6.0
+      version: 5.6.0
+    tsup:
+      specifier: ^8.3.5
+      version: 8.3.5
+    tsx:
+      specifier: ^4.19.2
+      version: 4.19.2
+    typescript:
+      specifier: 5.4.5
+      version: 5.4.5
+    typescript-eslint:
+      specifier: ^8.16.0
+      version: 8.18.2
+    zod:
+      specifier: ^3.24.1
+      version: 3.24.1
+
 importers:
 
   .:
     devDependencies:
       '@commitlint/cli':
-        specifier: ^19.6.0
+        specifier: 'catalog:'
         version: 19.6.1(@types/node@22.10.2)(typescript@5.4.5)
       '@commitlint/config-conventional':
-        specifier: ^19.6.0
+        specifier: 'catalog:'
         version: 19.6.0
       '@commitlint/config-pnpm-scopes':
-        specifier: ^19.5.0
+        specifier: 'catalog:'
         version: 19.5.0
       '@stylistic/eslint-plugin':
-        specifier: ^2.11.0
+        specifier: 'catalog:'
         version: 2.12.1(eslint@9.17.0(jiti@2.4.2))(typescript@5.4.5)
       eslint:
-        specifier: '9'
+        specifier: 'catalog:'
         version: 9.17.0(jiti@2.4.2)
       husky:
-        specifier: ^9.1.7
+        specifier: 'catalog:'
         version: 9.1.7
       lint-staged:
-        specifier: ^15.2.10
+        specifier: 'catalog:'
         version: 15.3.0
       tsup:
-        specifier: ^8.3.5
+        specifier: 'catalog:'
         version: 8.3.5(jiti@2.4.2)(tsx@4.19.2)(typescript@5.4.5)(yaml@2.6.1)
       typescript:
-        specifier: 5.4.5
+        specifier: 'catalog:'
         version: 5.4.5
       typescript-eslint:
-        specifier: ^8.16.0
+        specifier: 'catalog:'
         version: 8.18.2(eslint@9.17.0(jiti@2.4.2))(typescript@5.4.5)
 
   packages/amxx-pawn-easyhttp:
@@ -45,17 +108,20 @@ importers:
         specifier: workspace:*
         version: link:../core
       change-case:
-        specifier: ^5.4.4
+        specifier: 'catalog:'
         version: 5.4.4
       jsxte:
-        specifier: ^3.3.1
+        specifier: 'catalog:'
         version: 3.3.1
       ts-pattern:
-        specifier: ^5.6.0
+        specifier: 'catalog:'
         version: 5.6.0
+      zod:
+        specifier: 'catalog:'
+        version: 3.24.1
     devDependencies:
       '@scalar/openapi-types':
-        specifier: ^0.1.5
+        specifier: 'catalog:'
         version: 0.1.5
 
   packages/cli:
@@ -67,33 +133,33 @@ importers:
         specifier: workspace:*
         version: link:../core
       commander:
-        specifier: ^12.1.0
+        specifier: 'catalog:'
         version: 12.1.0
       zod:
-        specifier: ^3.24.1
+        specifier: 'catalog:'
         version: 3.24.1
     devDependencies:
       '@types/node':
-        specifier: ^22.10.2
+        specifier: 'catalog:'
         version: 22.10.2
 
   packages/core:
     dependencies:
       '@scalar/openapi-parser':
-        specifier: ^0.10.2
+        specifier: 'catalog:'
         version: 0.10.2
       allof-merge:
-        specifier: ^0.6.6
+        specifier: 'catalog:'
         version: 0.6.6
       tsx:
-        specifier: ^4.19.2
+        specifier: 'catalog:'
         version: 4.19.2
       zod:
-        specifier: ^3.24.1
+        specifier: 'catalog:'
         version: 3.24.1
     devDependencies:
       '@scalar/openapi-types':
-        specifier: ^0.1.5
+        specifier: 'catalog:'
         version: 0.1.5
 
 packages:

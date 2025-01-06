@@ -11,9 +11,10 @@
 	},
 	"dependencies": {
 		"@oas-codegen/core": "workspace:*",
-		"change-case": "^5.4.4",
-		"jsxte": "^3.3.1",
-		"ts-pattern": "^5.6.0"
+		"change-case": "catalog:",
+		"jsxte": "catalog:",
+		"ts-pattern": "catalog:",
+		"zod": "catalog:"
 	},
 	"files": [
 		"dist"
@@ -33,6 +34,6 @@
 		}
 	},
 	"devDependencies": {
-		"@scalar/openapi-types": "^0.1.5"
+		"@scalar/openapi-types": "catalog:"
 	}
 }

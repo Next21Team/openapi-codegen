@@ -29,7 +29,7 @@ export default tseslint.config({
   files: [
     'packages/core/src/**/*.ts',
     'packages/cli/src/**/*.ts',
-    'packages/amxx-pawn-easyhttp/src/**/*.ts',
+    'packages/amxx-pawn-easyhttp/src/**/*.{ts,tsx}',
   ],
   languageOptions: {
     ecmaVersion: 2020

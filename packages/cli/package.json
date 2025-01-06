@@ -16,8 +16,8 @@
   "dependencies": {
     "@oas-codegen/amxx-pawn-easyhttp": "workspace:*",
     "@oas-codegen/core": "workspace:*",
-    "commander": "^12.1.0",
-    "zod": "^3.24.1"
+    "commander": "catalog:",
+    "zod": "catalog:"
   },
   "files": [
     "dist",
@@ -27,6 +27,6 @@
     "access": "public"
   },
   "devDependencies": {
-    "@types/node": "^22.10.2"
+    "@types/node": "catalog:"
   }
 }

@@ -1,15 +1,15 @@
 {
 	"devDependencies": {
-		"@commitlint/cli": "^19.6.0",
-		"@commitlint/config-conventional": "^19.6.0",
-		"@commitlint/config-pnpm-scopes": "^19.5.0",
-		"@stylistic/eslint-plugin": "^2.11.0",
-		"eslint": "9",
-		"husky": "^9.1.7",
-		"lint-staged": "^15.2.10",
-		"tsup": "^8.3.5",
-		"typescript": "5.4.5",
-		"typescript-eslint": "^8.16.0"
+		"@commitlint/cli": "catalog:",
+		"@commitlint/config-conventional": "catalog:",
+		"@commitlint/config-pnpm-scopes": "catalog:",
+		"@stylistic/eslint-plugin": "catalog:",
+		"eslint": "catalog:",
+		"husky": "catalog:",
+		"lint-staged": "catalog:",
+		"tsup": "catalog:",
+		"typescript": "catalog:",
+		"typescript-eslint": "catalog:"
 	},
 	"scripts": {
 		"prepare": "husky",

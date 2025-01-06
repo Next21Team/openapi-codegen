@@ -1,3 +1,5 @@
+import { Declaration, Eol, Line } from './syntax/common';
+
 const logo = `/*
 
      ________  ________  ________           ________  _______   ________      
@@ -14,22 +16,22 @@ const logo = `/*
                         ALL YOUR CHANGES CAN BE OVERWRITTEN.                     
 
 */
-`
+`;
 
 export const Document: JSXTE.Component<{ name: string }> = ({ children, name }) => {
-     return (
-          <>
-               {logo}
-
-               #if defined _{name}_included
-               #endinput
-               #endif
-               #define _{name}_included
-
-               {'#include <amxmodx>'}
-               {'#include <easyhttp>'}
-
-               {children}
-          </>
-     )
-}
+	return (
+		<Declaration>
+			{logo}
+			<Eol />
+			<Line>#if defined _{name}_included</Line>
+			<Line>#endinput</Line>
+			<Line>#endif</Line>
+			<Line>#define _{name}_included</Line>
+			<Eol />
+			<Line>{'#include <amxmodx>'}</Line>
+			<Line>{'#include <easyhttp>'}</Line>
+			<Eol />
+			{children}
+		</Declaration>
+	);
+};

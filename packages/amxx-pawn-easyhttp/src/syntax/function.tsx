@@ -1,7 +1,7 @@
-import type { Special } from "~/lib/special-type";
-import { CompoundStatement, Declaration } from "./common"
-import type { TagIdentifier } from "./tags";
-import type { VarIdentifier } from "./variable";
+import type { Special } from '~/lib/special-type';
+import { CompoundStatement, Declaration } from './common';
+import type { TagIdentifier } from './tags';
+import type { VarIdentifier } from './variable';
 
 export type FuncIdentifier = Special<string, 'funcIdentifier'>;
 
@@ -21,13 +21,13 @@ export type FuncArgument = {
 };
 
 export interface FunctionProps {
-	identifier: FuncIdentifier,
-	args?: FuncArgument[],
-	stock?: boolean,
-	public?: boolean,
-	native?: boolean
-	static?: boolean,
-	tag?: string
+	identifier: FuncIdentifier;
+	args?: FuncArgument[];
+	stock?: boolean;
+	public?: boolean;
+	native?: boolean;
+	static?: boolean;
+	tag?: string;
 }
 
 export const Function: JSXTE.Component<FunctionProps> = ({ children, identifier, tag, args = [], ...props }) => {
@@ -35,8 +35,8 @@ export const Function: JSXTE.Component<FunctionProps> = ({ children, identifier,
 		(props.stock && 'stock'),
 		(props.public && 'public'),
 		(props.native && 'native'),
-		(props.static && 'static')
-	].filter((t): t is string => !!t)
+		(props.static && 'static'),
+	].filter((t): t is string => !!t);
 
 	const formattedArgs = args
 		.map((arg) => {
@@ -47,7 +47,7 @@ export const Function: JSXTE.Component<FunctionProps> = ({ children, identifier,
 			else
 				return arg.name;
 		})
-		.join(', ')
+		.join(', ');
 
 	return (
 		<Declaration>
@@ -57,5 +57,5 @@ export const Function: JSXTE.Component<FunctionProps> = ({ children, identifier,
 			{' '}
 			<CompoundStatement>{children}</CompoundStatement>
 		</Declaration>
-	)
-}
+	);
+};

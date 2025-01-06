@@ -1,8 +1,9 @@
-import { FormattingConfig } from '~/syntax/formating-options';
+import { formattingOptionsCtx } from '~/syntax/formating-options';
 import { BaseSchema } from '../schema/base';
-import { boolTag } from '~/syntax/tags';
+import { boolTag, type TagIdentifier } from '~/syntax/tags';
 import { Statement } from '~/syntax/common';
-import type { FuncIdentifier, TagIdentifier, VarIdentifier } from '~/context';
+import type { VarIdentifier } from '~/syntax/variable';
+import type { FuncIdentifier } from '~/syntax/function';
 
 export const schemaArg = 'var' as VarIdentifier;
 export const initializerArg = 'value' as VarIdentifier;
@@ -10,7 +11,11 @@ export const initializerArg = 'value' as VarIdentifier;
 export const nullTag = 'Null' as TagIdentifier;
 export const nullLiteral = 'null';
 
-export const NullDeclaration = () => `const ${nullTag}:${nullLiteral} = ${nullTag}:0;`;
+export const NullDeclaration = () => (
+	<Statement>
+		const {nullTag}:{nullLiteral} = {nullTag}:0
+	</Statement>
+);
 
 export type SchemaIsNullDeclProps = {
 	tag: TagIdentifier;
@@ -19,7 +24,7 @@ export type SchemaIsNullDeclProps = {
 
 export const SchemaIsNullDeclaration: JSXTE.Component<SchemaIsNullDeclProps>
 	= ({ identifier, tag }, { ctx }) => {
-		const { toFunc } = ctx.getOrFail(FormattingConfig);
+		const { toFunc } = ctx.getOrFail(formattingOptionsCtx);
 
 		return (
 			<BaseSchema
@@ -36,10 +41,14 @@ export const SchemaIsNullDeclaration: JSXTE.Component<SchemaIsNullDeclProps>
 					return ezjson_is_null(EzJSON:${schemaArg})
 				</Statement>
 			</BaseSchema>
-		)
+		);
 	};
 
 export const undefinedTag = 'Undefined' as TagIdentifier;
-export const undefinedLieral = 'undefined';
+export const undefinedLiteral = 'undefined';
 
-export const UndefinedDeclaration = () => `const ${undefinedTag}:${undefinedLieral} = ${undefinedTag}:0;`;
+export const UndefinedDeclaration = () => (
+	<Statement>
+		const {undefinedTag}:{undefinedLiteral} = {undefinedTag}:0
+	</Statement>
+);

@@ -1,11 +1,24 @@
-import { Fragment } from "jsxte/jsx-runtime";
-import { FormattingConfig } from "./formating-options";
-import { Indent, Tab } from "./indent";
+import { Fragment } from 'jsxte/jsx-runtime';
+import { formattingOptionsCtx } from './formating-options';
+import { Indent, Tab } from './indent';
+
+export const Eol: JSXTE.Component<{ repeat?: number }> = ({ repeat = 1 }) => '\n'.repeat(repeat);
+
+export const Line: JSXTE.Component<{ spacing?: number }> = ({ children, spacing = 0 }) => (
+	<Declaration>
+		{children}<Eol repeat={spacing + 1} />
+	</Declaration>
+);
 
 export const Statement: JSXTE.Component = ({ children }, { ctx }) => {
-	const { semicolon } = ctx.getOrFail(FormattingConfig);
-	return <>{children}{semicolon}{'\n'}</>
-}
+	const { semicolon } = ctx.getOrFail(formattingOptionsCtx);
+
+	return (
+		<Line>
+			{children}{semicolon}
+		</Line>
+	);
+};
 
 export const Declaration = Fragment;
 
@@ -18,7 +31,5 @@ export const CompoundStatement: JSXTE.Component = ({ children }) => {
 				{'}\n'}
 			</Indent>
 		</Declaration>
-	)
-}
-
-export const Eol = () => '\n';
+	);
+};

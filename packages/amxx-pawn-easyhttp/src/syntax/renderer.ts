@@ -12,4 +12,6 @@ const renderer = new JsxteRenderer<string>({
 	},
 });
 
-export const renderJsxToString = renderer.render;
+export function renderJsxToString(element: JSX.Element) {
+	return renderer.render(element);
+}

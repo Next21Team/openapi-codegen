@@ -1,5 +1,6 @@
 import type { Context } from '~/context';
-import { generateSchema } from './schema/generate';
+import { generateGlobalDeclarations, generateSchema } from './schema/generate';
+import { Declaration, Eol } from '~/syntax/common';
 
 export function generateComponents(ctx: Context): JSX.Element {
 	const generatedComponents = new Set<object>();
@@ -7,9 +8,12 @@ export function generateComponents(ctx: Context): JSX.Element {
 
 	const { document } = ctx;
 
+	const globalDeclarations = generateGlobalDeclarations();
+	sections.push(globalDeclarations);
+
 	Object.entries(document.components?.schemas ?? {})
 		.forEach(([name, schema]) => {
-			const { declaration, dependencies } = generateSchema(ctx, {
+			const { declaration, dependencies } = generateSchema({
 				schema,
 				name: `${name} schema`,
 				shouldResolveDependency: schema => !generatedComponents.has(schema),
@@ -19,5 +23,14 @@ export function generateComponents(ctx: Context): JSX.Element {
 			dependencies.concat(declaration).forEach(decl => sections.push(decl.code));
 		});
 
-	return sections.join('\n\n');
+	return (
+		<Declaration>
+			{sections.map(section => (
+				<Declaration>
+					{section}
+					<Eol repeat={2} />
+				</Declaration>
+			))}
+		</Declaration>
+	);
 }

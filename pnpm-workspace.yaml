@@ -1,2 +1,23 @@
 packages:
-  - 'packages/*'
+  - packages/*
+catalog:
+  "@commitlint/cli": ^19.6.0
+  "@commitlint/config-conventional": ^19.6.0
+  "@commitlint/config-pnpm-scopes": ^19.5.0
+  "@scalar/openapi-parser": ^0.10.2
+  "@scalar/openapi-types": ^0.1.5
+  "@stylistic/eslint-plugin": ^2.11.0
+  "@types/node": ^22.10.2
+  allof-merge: ^0.6.6
+  change-case: ^5.4.4
+  commander: ^12.1.0
+  eslint: ^9.0.0
+  husky: ^9.1.7
+  jsxte: ^3.3.1
+  lint-staged: ^15.2.10
+  ts-pattern: ^5.6.0
+  tsup: ^8.3.5
+  tsx: ^4.19.2
+  typescript: 5.4.5
+  typescript-eslint: ^8.16.0
+  zod: ^3.24.1
