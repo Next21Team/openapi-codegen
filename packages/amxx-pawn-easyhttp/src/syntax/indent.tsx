@@ -1,7 +1,6 @@
 import { defineContext } from 'jsxte';
 import { formattingOptionsCtx } from './formating-options';
 import { isTagElement } from '~/lib/jsx';
-import { Line } from './common';
 
 const indentContext = defineContext<number>();
 

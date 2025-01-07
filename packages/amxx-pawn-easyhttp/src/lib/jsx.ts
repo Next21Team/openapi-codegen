@@ -7,3 +7,5 @@ export type MaybeRenderProp<T> = JSXTE.ElementChildren | ((api: T) => JSXTE.Elem
 export const transformRenderProp = <T>(prop: MaybeRenderProp<T>, api: T) => {
 	return prop instanceof Function ? prop(api) : prop;
 };
+
+export type { ContextAccessor } from 'node_modules/jsxte/dist/types/component-api/component-api';

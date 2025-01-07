@@ -1,36 +1,55 @@
+import {
+	generateGlobalSchemas,
+	generateSchema,
+	GlobalDeclarations,
+	type SchemaDeclaration,
+} from './schema/generate';
+
 import type { Context } from '~/context';
-import { generateGlobalDeclarations, generateSchema } from './schema/generate';
 import { Declaration, Eol } from '~/syntax/common';
 
-export function generateComponents(ctx: Context): JSX.Element {
+export function generateComponents(ctx: Context) {
 	const generatedComponents = new Set<object>();
-	const sections: JSX.Element[] = [];
+	const sections: SchemaDeclaration[] = [];
 
 	const { document } = ctx;
 
-	const globalDeclarations = generateGlobalDeclarations();
-	sections.push(globalDeclarations);
+	const globalDeclarations = generateGlobalSchemas();
+	sections.push(...globalDeclarations);
 
 	Object.entries(document.components?.schemas ?? {})
 		.forEach(([name, schema]) => {
-			const { declaration, dependencies } = generateSchema({
+			const { declarations, dependencies } = generateSchema({
 				schema,
 				name: `${name} schema`,
 				shouldResolveDependency: schema => !generatedComponents.has(schema),
 				onDependencyResolved: (declaration, schema) => generatedComponents.add(schema),
 			});
 
-			dependencies.concat(declaration).forEach(decl => sections.push(decl.code));
+			dependencies.concat(declarations).forEach(decl => sections.push(decl));
 		});
 
-	return (
-		<Declaration>
-			{sections.map(section => (
-				<Declaration>
-					{section}
-					<Eol repeat={2} />
-				</Declaration>
-			))}
-		</Declaration>
-	);
+	return {
+		prototypes: (
+			<Declaration>
+				{sections.map(section => (
+					<Declaration>
+						{section.prototype} <Eol />
+					</Declaration>
+				))}
+			</Declaration>
+		),
+		implementations: (
+			<Declaration>
+				<GlobalDeclarations />
+				<Eol repeat={2} />
+
+				{sections.map(section => (
+					<Declaration>
+						{section.implementation} <Eol repeat={2} />
+					</Declaration>
+				))}
+			</Declaration>
+		),
+	};
 }

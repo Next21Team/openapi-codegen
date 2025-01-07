@@ -1,18 +1,19 @@
 import { transformRenderProp, type MaybeRenderProp } from '~/lib/jsx';
 import { LimitedDefine } from '~/syntax/directives/define';
 import { formattingOptionsCtx } from '~/syntax/formating-options';
-import { Function, type FuncArgument, type FunctionProps } from '~/syntax/function';
+import { FunctionDecl, type FuncArgument, type FunctionProps } from '~/syntax/function';
 import type { VarIdentifier } from '~/syntax/variable';
 
 const macroName = '__END';
 
-export interface FunctionWithUnionArgsProps extends Omit<FunctionProps, 'children'> {
+export interface FunctionDeclWithUnionArgsProps extends Omit<FunctionProps, 'children'> {
 	children?: MaybeRenderProp<{
+		args: FuncArgument[];
 		getTagIdVar: (key: FuncArgument) => VarIdentifier | undefined;
 	}>;
 }
 
-export const FunctionWithUnionArgs: JSXTE.Component<FunctionWithUnionArgsProps>
+export const FunctionDeclWithUnionArgs: JSXTE.FunctionalComponent<FunctionDeclWithUnionArgsProps>
 	= ({ args = [], children, ...props }, { ctx }) => {
 		const { toVar } = ctx.getOrFail(formattingOptionsCtx);
 
@@ -34,12 +35,12 @@ export const FunctionWithUnionArgs: JSXTE.Component<FunctionWithUnionArgsProps>
 				pattern={macroName}
 				replacement={tagofArgsList}
 			>
-				<Function
+				<FunctionDecl
 					args={args.concat({ type: 'macro', name: macroName })}
 					{...props}
 				>
-					{transformRenderProp(children, { getTagIdVar })}
-				</Function>
+					{transformRenderProp(children, { getTagIdVar, args })}
+				</FunctionDecl>
 			</LimitedDefine>
 		);
 	};

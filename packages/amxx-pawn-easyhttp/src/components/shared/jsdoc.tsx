@@ -23,9 +23,9 @@ export const JsDoc: JSXTE.Component<JsdocProps> = ({
 	return (
 		<Declaration>
 			<Block>
-				{deprecated && <Line spacing={1}>@deprecated This definition is deprecated</Line>}
-				{title && <Line spacing={1}>{title.toUpperCase()}</Line>}
-				{description && <Line spacing={1}>{description}</Line>}
+				{deprecated && [<Line>@deprecated This definition is deprecated</Line>, <Eol />]}
+				{title && [<Line>{title.toUpperCase()}</Line>, <Eol />]}
+				{description && [<Line>{description}</Line>, <Eol />]}
 				{!!args?.length && ([
 					args.map(arg => <Line>@param {arg.name} {arg.description}</Line>),
 					<Eol />,

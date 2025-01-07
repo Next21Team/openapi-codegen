@@ -1,11 +1,12 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types';
 import { match } from 'ts-pattern';
-import { IntegerLiteralDeclaration } from './integer/literal';
-import { Declaration, Eol } from '~/syntax/common';
 import { NullDeclaration, UndefinedDeclaration } from '../shared/primitives';
+import { generateIntegerLiteralDecl } from './integer/literal';
+import { Declaration, Eol } from '~/syntax/common';
 
-interface SchemaDeclaration {
-	code: JSX.Element;
+export interface SchemaDeclaration {
+	prototype: JSX.Element;
+	implementation: JSX.Element;
 }
 
 interface GenerateSchemaArgs {
@@ -16,36 +17,25 @@ interface GenerateSchemaArgs {
 }
 
 interface GenerateSchemaReturn {
-	declaration: SchemaDeclaration;
+	declarations: SchemaDeclaration[];
 	dependencies: SchemaDeclaration[];
 }
 
 export function generateSchema({
 	name,
 	schema,
-	shouldResolveDependency = () => true,
-	onDependencyResolved = () => { },
+	// shouldResolveDependency = () => true,
+	// onDependencyResolved = () => { },
 }: GenerateSchemaArgs): GenerateSchemaReturn {
-	const noImplementation = {
-		declaration: { code: `// [${name}] no implementation\n` },
+	const noImplementation: GenerateSchemaReturn = {
+		declarations: [{ implementation: `// [${name}] no implementation\n`, prototype: null }],
 		dependencies: [] as SchemaDeclaration[],
 	};
 
 	return match(schema.type)
 		.with('integer', () => {
 			return {
-				declaration: {
-					code: (
-						<IntegerLiteralDeclaration
-							name={`${name}_init`}
-							jsDoc={{
-								title: 'test title',
-								description: 'Replace an entire Item with new fields. Equivalent to a PUT request.',
-								deprecated: true,
-							}}
-						/>
-					),
-				},
+				declarations: generateIntegerLiteralDecl({ name, jsDoc: schema }),
 				dependencies: [],
 			};
 		})
@@ -63,14 +53,18 @@ export function generateSchema({
 		});
 }
 
-export function generateGlobalDeclarations() {
+export function generateGlobalSchemas(): SchemaDeclaration[] {
+	return [
+		...generateIntegerLiteralDecl({ name: 'integer' }),
+	];
+}
+
+export const GlobalDeclarations: JSXTE.Component = () => {
 	return (
 		<Declaration>
 			<UndefinedDeclaration />
 			<Eol />
 			<NullDeclaration />
-			<Eol />
-			<IntegerLiteralDeclaration name='number' />
 		</Declaration>
 	);
-}
+};

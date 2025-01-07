@@ -1,5 +1,5 @@
 import type { Special } from '~/lib/special-type';
-import { CompoundStatement, Declaration } from './common';
+import { CompoundStatement, Declaration, Statement } from './common';
 import type { TagIdentifier } from './tags';
 import type { VarIdentifier } from './variable';
 
@@ -30,7 +30,7 @@ export interface FunctionProps {
 	tag?: string;
 }
 
-export const Function: JSXTE.Component<FunctionProps> = ({ children, identifier, tag, args = [], ...props }) => {
+const Prototype: JSXTE.Component<FunctionProps> = ({ identifier, tag, args = [], ...props }) => {
 	const modifiers = [
 		(props.stock && 'stock'),
 		(props.public && 'public'),
@@ -54,6 +54,22 @@ export const Function: JSXTE.Component<FunctionProps> = ({ children, identifier,
 			{modifiers.join(' ')}
 			{' '}
 			{tag && `${tag}:`}{identifier}({formattedArgs})
+		</Declaration>
+	);
+};
+
+export const FunctionProto: JSXTE.Component<FunctionProps> = (props) => {
+	return (
+		<Statement>
+			<Prototype {...props} />
+		</Statement>
+	);
+};
+
+export const FunctionDecl: JSXTE.Component<FunctionProps> = ({ children, ...props }) => {
+	return (
+		<Declaration>
+			<Prototype {...props} />
 			{' '}
 			<CompoundStatement>{children}</CompoundStatement>
 		</Declaration>

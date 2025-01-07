@@ -50,7 +50,7 @@ export const FormattingConfig: JSXTE.Component<FormattingConfigProps> = ({
 	const {
 		func = 'snakeCase',
 		tag = 'pascalCase',
-		variable = 'snakeCase',
+		variable = 'camelCase',
 		domainSeparator = '__',
 	} = conventions;
 

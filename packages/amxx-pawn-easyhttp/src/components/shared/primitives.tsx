@@ -1,5 +1,5 @@
 import { formattingOptionsCtx } from '~/syntax/formating-options';
-import { BaseSchema } from '../schema/base';
+import { BaseSchemaDecl } from '../schema/base';
 import { boolTag, type TagIdentifier } from '~/syntax/tags';
 import { Statement } from '~/syntax/common';
 import type { VarIdentifier } from '~/syntax/variable';
@@ -27,7 +27,7 @@ export const SchemaIsNullDeclaration: JSXTE.Component<SchemaIsNullDeclProps>
 		const { toFunc } = ctx.getOrFail(formattingOptionsCtx);
 
 		return (
-			<BaseSchema
+			<BaseSchemaDecl
 				tag={boolTag}
 				identifier={toFunc(identifier, 'is null')}
 				args={[{
@@ -40,7 +40,7 @@ export const SchemaIsNullDeclaration: JSXTE.Component<SchemaIsNullDeclProps>
 				<Statement>
 					return ezjson_is_null(EzJSON:${schemaArg})
 				</Statement>
-			</BaseSchema>
+			</BaseSchemaDecl>
 		);
 	};
 

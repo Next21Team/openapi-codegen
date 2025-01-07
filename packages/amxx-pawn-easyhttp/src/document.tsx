@@ -29,7 +29,7 @@ export const Document: JSXTE.Component<{ name: string }> = ({ children, name }) 
 			<Line>#define _{name}_included</Line>
 			<Eol />
 			<Line>{'#include <amxmodx>'}</Line>
-			<Line>{'#include <easyhttp>'}</Line>
+			<Line>{'#include <easy_http>'}</Line>
 			<Eol />
 			{children}
 		</Declaration>

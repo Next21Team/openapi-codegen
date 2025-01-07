@@ -4,9 +4,9 @@ import { Indent, Tab } from './indent';
 
 export const Eol: JSXTE.Component<{ repeat?: number }> = ({ repeat = 1 }) => '\n'.repeat(repeat);
 
-export const Line: JSXTE.Component<{ spacing?: number }> = ({ children, spacing = 0 }) => (
+export const Line: JSXTE.Component = ({ children }) => (
 	<Declaration>
-		{children}<Eol repeat={spacing + 1} />
+		{children}<Eol />
 	</Declaration>
 );
 
