@@ -7,14 +7,14 @@ import type { VarIdentifier } from '~/syntax/variable';
 const macroName = '__END';
 
 export interface FunctionDeclWithUnionArgsProps extends Omit<FunctionProps, 'children'> {
-	children?: MaybeRenderProp<{
+	render?: MaybeRenderProp<{
 		args: FuncArgument[];
 		getTagIdVar: (key: FuncArgument) => VarIdentifier | undefined;
 	}>;
 }
 
 export const FunctionDeclWithUnionArgs: JSXTE.FunctionalComponent<FunctionDeclWithUnionArgsProps>
-	= ({ args = [], children, ...props }, { ctx }) => {
+	= ({ args = [], render, ...props }, { ctx }) => {
 		const { toVar } = ctx.getOrFail(formattingOptionsCtx);
 
 		const generatedTagOfs = new Map(
@@ -28,7 +28,7 @@ export const FunctionDeclWithUnionArgs: JSXTE.FunctionalComponent<FunctionDeclWi
 			.map(([arg, tagIdVar]) => `${tagIdVar} = tagof(${arg.name})`)
 			.join(', ');
 
-		const getTagIdVar = generatedTagOfs.get;
+		const getTagIdVar = (key: FuncArgument) => generatedTagOfs.get(key);
 
 		return (
 			<LimitedDefine
@@ -39,7 +39,7 @@ export const FunctionDeclWithUnionArgs: JSXTE.FunctionalComponent<FunctionDeclWi
 					args={args.concat({ type: 'macro', name: macroName })}
 					{...props}
 				>
-					{transformRenderProp(children, { getTagIdVar, args })}
+					{transformRenderProp(render, { getTagIdVar, args })}
 				</FunctionDecl>
 			</LimitedDefine>
 		);

@@ -43,7 +43,7 @@ const Prototype: JSXTE.Component<FunctionProps> = ({ identifier, tag, args = [],
 			if (arg.type === 'single')
 				return `${arg.const ? 'const ' : ''}${arg.tag}:${arg.name}`;
 			else if (arg.type === 'mixed')
-				return `${arg.const ? 'const ' : ''}{${arg.tag.join(',')}}:${arg.name}`;
+				return `${arg.const ? 'const ' : ''}{${arg.tag.join(', ')}}:${arg.name}`;
 			else
 				return arg.name;
 		})

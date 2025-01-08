@@ -3,6 +3,7 @@ import { match } from 'ts-pattern';
 import { NullDeclaration, UndefinedDeclaration } from '../shared/primitives';
 import { generateIntegerLiteralDecl } from './integer/literal';
 import { Declaration, Eol } from '~/syntax/common';
+import { generateNumberLiteralDecl } from './number/literal';
 
 export interface SchemaDeclaration {
 	prototype: JSX.Element;
@@ -40,7 +41,10 @@ export function generateSchema({
 			};
 		})
 		.with('number', () => {
-			return noImplementation;
+			return {
+				declarations: generateNumberLiteralDecl({ name, jsDoc: schema }),
+				dependencies: [],
+			};
 		})
 		.with('boolean', () => {
 			return noImplementation;
@@ -56,6 +60,7 @@ export function generateSchema({
 export function generateGlobalSchemas(): SchemaDeclaration[] {
 	return [
 		...generateIntegerLiteralDecl({ name: 'integer' }),
+		...generateNumberLiteralDecl({ name: 'number' }),
 	];
 }
 

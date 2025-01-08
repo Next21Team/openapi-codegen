@@ -5,8 +5,8 @@ import {
 	type SchemaDeclaration,
 } from './schema/generate';
 
-import type { Context } from '~/context';
 import { Declaration, Eol } from '~/syntax/common';
+import type { Context } from '~/context';
 
 export function generateComponents(ctx: Context) {
 	const generatedComponents = new Set<object>();
@@ -46,7 +46,7 @@ export function generateComponents(ctx: Context) {
 
 				{sections.map(section => (
 					<Declaration>
-						{section.implementation} <Eol repeat={2} />
+						{section.implementation} <Eol />
 					</Declaration>
 				))}
 			</Declaration>
