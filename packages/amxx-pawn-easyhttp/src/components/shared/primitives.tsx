@@ -8,6 +8,9 @@ import type { FuncIdentifier } from '~/syntax/function';
 export const schemaArg = 'var' as VarIdentifier;
 export const initializerArg = 'value' as VarIdentifier;
 
+export const outputArg = 'dest' as VarIdentifier;
+export const outputArgLen = 'destLen' as VarIdentifier;
+
 export const nullTag = 'Null' as TagIdentifier;
 export const nullLiteral = 'null';
 

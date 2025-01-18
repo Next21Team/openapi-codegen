@@ -4,6 +4,8 @@ import { NullDeclaration, UndefinedDeclaration } from '../shared/primitives';
 import { generateIntegerLiteralDecl } from './integer/literal';
 import { Declaration, Eol } from '~/syntax/common';
 import { generateNumberLiteralDecl } from './number/literal';
+import { generateBooleanLiteralDecl } from './boolean/literal';
+import { generateStringLiteralDecl } from './string/literal';
 
 export interface SchemaDeclaration {
 	prototype: JSX.Element;
@@ -47,10 +49,16 @@ export function generateSchema({
 			};
 		})
 		.with('boolean', () => {
-			return noImplementation;
+			return {
+				declarations: generateBooleanLiteralDecl({ name, jsDoc: schema }),
+				dependencies: [],
+			};
 		})
 		.with('string', () => {
-			return noImplementation;
+			return {
+				declarations: generateStringLiteralDecl({ name, jsDoc: schema }),
+				dependencies: [],
+			};
 		})
 		.otherwise(() => {
 			return noImplementation;
@@ -61,6 +69,8 @@ export function generateGlobalSchemas(): SchemaDeclaration[] {
 	return [
 		...generateIntegerLiteralDecl({ name: 'integer' }),
 		...generateNumberLiteralDecl({ name: 'number' }),
+		...generateBooleanLiteralDecl({ name: 'boolean' }),
+		...generateStringLiteralDecl({ name: 'string' }),
 	];
 }
 

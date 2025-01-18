@@ -7,14 +7,15 @@ export type FuncIdentifier = Special<string, 'funcIdentifier'>;
 
 export type FuncArgument = {
 	type: 'single';
-	tag: TagIdentifier;
 	name: VarIdentifier;
-	const: boolean;
+	tag?: TagIdentifier;
+	const?: boolean;
+	array?: boolean;
 } | {
 	type: 'mixed';
 	tag: TagIdentifier[];
 	name: VarIdentifier;
-	const: boolean;
+	const?: boolean;
 } | {
 	type: 'macro';
 	name: string;
@@ -41,7 +42,7 @@ const Prototype: JSXTE.Component<FunctionProps> = ({ identifier, tag, args = [],
 	const formattedArgs = args
 		.map((arg) => {
 			if (arg.type === 'single')
-				return `${arg.const ? 'const ' : ''}${arg.tag}:${arg.name}`;
+				return `${arg.const ? 'const ' : ''}${arg.tag ? `${arg.tag}:` : ''}${arg.name}${arg.array ? '[]' : ''}`;
 			else if (arg.type === 'mixed')
 				return `${arg.const ? 'const ' : ''}{${arg.tag.join(', ')}}:${arg.name}`;
 			else

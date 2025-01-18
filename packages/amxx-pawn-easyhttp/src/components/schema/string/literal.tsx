@@ -1,32 +1,33 @@
 import { formattingOptionsCtx } from '~/syntax/formating-options';
 import { BaseSchemaDecl, BaseSchemaProto, type BaseSchemaProtoProps } from '../base';
-import { initializerArg, schemaArg } from '~/components/shared/primitives';
+import { initializerArg, outputArg, outputArgLen, schemaArg } from '~/components/shared/primitives';
+
 import { Declaration, Statement } from '~/syntax/common';
-import { integerTag } from './tag';
+import { stringTag } from './tag';
 import { JsDoc, type JsdocProps } from '~/components/shared/jsdoc';
 import type { SchemaDeclaration } from '../generate';
 import type { ContextAccessor } from '~/lib/jsx';
 
-export interface IntegerLiteralDeclarationProps {
+export interface StringLiteralDeclarationProps {
 	name: string;
 	jsDoc?: JsdocProps;
 }
 
-export const generateIntegerLiteralDecl = (props: IntegerLiteralDeclarationProps) => {
+export const generateStringLiteralDecl = (props: StringLiteralDeclarationProps) => {
 	return [
 		generateInit(props),
 		generateGet(props),
 	];
 };
 
-const generateInit = ({ name, jsDoc }: IntegerLiteralDeclarationProps): SchemaDeclaration => {
+const generateInit = ({ name, jsDoc }: StringLiteralDeclarationProps): SchemaDeclaration => {
 	const getSchemaArgs = (ctx: ContextAccessor): BaseSchemaProtoProps => {
 		const { toFunc } = ctx.getOrFail(formattingOptionsCtx);
 
 		return {
-			tag: integerTag,
+			tag: stringTag,
 			identifier: toFunc(name),
-			args: [{ type: 'single', const: true, name: initializerArg }],
+			args: [{ type: 'single', const: true, name: initializerArg, array: true }],
 		};
 	};
 
@@ -36,7 +37,7 @@ const generateInit = ({ name, jsDoc }: IntegerLiteralDeclarationProps): SchemaDe
 				<JsDoc
 					{...jsDoc}
 					args={[{ name: initializerArg, description: 'Initializer value' }]}
-					returnExpr={`${integerTag} primitive`}
+					returnExpr={`${stringTag} primitive`}
 				/>
 			)}
 			<BaseSchemaProto {...getSchemaArgs(ctx)} />
@@ -45,7 +46,7 @@ const generateInit = ({ name, jsDoc }: IntegerLiteralDeclarationProps): SchemaDe
 
 	const Code: JSXTE.Component = (props, { ctx }) => (
 		<BaseSchemaDecl {...getSchemaArgs(ctx)}>
-			<Statement>return {integerTag}:ezjson_init_number({initializerArg})</Statement>
+			<Statement>return {stringTag}:ezjson_init_string({initializerArg})</Statement>
 		</BaseSchemaDecl>
 	);
 
@@ -55,13 +56,17 @@ const generateInit = ({ name, jsDoc }: IntegerLiteralDeclarationProps): SchemaDe
 	};
 };
 
-const generateGet = ({ name }: IntegerLiteralDeclarationProps): SchemaDeclaration => {
+const generateGet = ({ name }: StringLiteralDeclarationProps): SchemaDeclaration => {
 	const getSchemaArgs = (ctx: ContextAccessor): BaseSchemaProtoProps => {
 		const { toFunc } = ctx.getOrFail(formattingOptionsCtx);
 
 		return {
 			identifier: toFunc(name, 'get'),
-			args: [{ type: 'single', const: true, tag: integerTag, name: schemaArg }],
+			args: [
+				{ type: 'single', const: true, tag: stringTag, name: schemaArg },
+				{ type: 'single', array: true, name: outputArg },
+				{ type: 'single', const: true, name: outputArgLen },
+			],
 		};
 	};
 
@@ -71,7 +76,7 @@ const generateGet = ({ name }: IntegerLiteralDeclarationProps): SchemaDeclaratio
 
 	const Code: JSXTE.Component = (props, { ctx }) => (
 		<BaseSchemaDecl {...getSchemaArgs(ctx)}>
-			<Statement>return ezjson_get_number(EzJSON:{schemaArg})</Statement>
+			<Statement>return ezjson_get_string(EzJSON:{schemaArg}, {outputArg}, {outputArgLen})</Statement>
 		</BaseSchemaDecl>
 	);
 
