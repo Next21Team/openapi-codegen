@@ -2,6 +2,7 @@ import type { Special } from '~/lib/special-type';
 import { CompoundStatement, Declaration, Statement } from './common';
 import type { TagIdentifier } from './tags';
 import type { VarIdentifier } from './variable';
+import { match } from 'ts-pattern';
 
 export type FuncIdentifier = Special<string, 'funcIdentifier'>;
 
@@ -10,12 +11,16 @@ export type FuncArgument = {
 	name: VarIdentifier;
 	tag?: TagIdentifier;
 	const?: boolean;
+	ref?: boolean;
 	array?: boolean;
+	equalTo?: string;
 } | {
 	type: 'mixed';
 	tag: TagIdentifier[];
 	name: VarIdentifier;
 	const?: boolean;
+	ref?: boolean;
+	equalTo?: string;
 } | {
 	type: 'macro';
 	name: string;
@@ -40,14 +45,28 @@ const Prototype: JSXTE.Component<FunctionProps> = ({ identifier, tag, args = [],
 	].filter((t): t is string => !!t);
 
 	const formattedArgs = args
-		.map((arg) => {
-			if (arg.type === 'single')
-				return `${arg.const ? 'const ' : ''}${arg.tag ? `${arg.tag}:` : ''}${arg.name}${arg.array ? '[]' : ''}`;
-			else if (arg.type === 'mixed')
-				return `${arg.const ? 'const ' : ''}{${arg.tag.join(', ')}}:${arg.name}`;
-			else
-				return arg.name;
-		})
+		.map(arg => match(arg)
+			.with({ type: 'single' }, arg => (
+				[
+					arg.ref && '&',
+					arg.const && 'const ',
+					arg.tag && `${arg.tag}:`,
+					arg.name,
+					arg.array && '[]',
+					arg.equalTo && ` = ${arg.equalTo}`,
+				].filter(Boolean).join('')
+			))
+			.with({ type: 'mixed' }, arg => (
+				[
+					arg.ref && '&',
+					arg.const && 'const ',
+					`{${arg.tag.join(', ')}}:${arg.name}`,
+					arg.equalTo && ` = ${arg.equalTo}`,
+				].filter(Boolean).join('')
+			))
+			.with({ type: 'macro' }, arg => arg.name)
+			.exhaustive(),
+		)
 		.join(', ');
 
 	return (
