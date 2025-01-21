@@ -42,7 +42,7 @@ export function generateComponents(ctx: Context) {
 		implementations: (
 			<Declaration>
 				<GlobalDeclarations />
-				<Eol repeat={2} />
+				<Eol />
 
 				{sections.map(section => (
 					<Declaration>

@@ -1,20 +1,21 @@
 import type { ContextAccessor } from '~/lib/jsx';
-import { BaseSchemaDecl, BaseSchemaProto, type BaseSchemaProtoProps } from '../../base';
+import { BaseSchemaDeclWithUnionArgs, BaseSchemaProto, type BaseSchemaProtoProps } from '../../base';
 import { formattingOptionsCtx } from '~/syntax/formating-options';
 import { initializerArg } from '~/components/shared/primitives';
-import { booleanTag } from '../tag';
+import { numberTag } from '../tag';
+import { floatTag, intTag } from '~/syntax/tags';
 import type { GetOperatorProps, InitOperatorComponent } from '../../operators';
-import { Declaration, Statement } from '~/syntax/common';
+import { Declaration, Eol, Statement } from '~/syntax/common';
 import { JsDoc } from '~/components/shared/jsdoc';
-import { boolTag } from '~/syntax/tags';
+import { If } from '~/syntax/if-else';
 
 const getSchemaArgs = (ctx: ContextAccessor, { name }: GetOperatorProps): BaseSchemaProtoProps => {
 	const { toFunc } = ctx.getOrFail(formattingOptionsCtx);
 
 	return {
-		tag: booleanTag,
+		tag: numberTag,
 		identifier: toFunc(name),
-		args: [{ type: 'single', const: true, tag: boolTag, name: initializerArg }],
+		args: [{ type: 'mixed', const: true, tag: [intTag, floatTag], name: initializerArg }],
 	};
 };
 
@@ -23,14 +24,21 @@ export const InitOperatorProto: InitOperatorComponent = (props, { ctx }) => (
 		<JsDoc
 			{...props.jsDoc}
 			args={[{ name: initializerArg, description: 'Initializer value' }]}
-			returnExpr={`${booleanTag} primitive`}
+			returnExpr={`${numberTag} primitive`}
 		/>
 		<BaseSchemaProto {...getSchemaArgs(ctx, props)} />
 	</Declaration>
 );
 
 export const InitOperatorImpl: InitOperatorComponent = (props, { ctx }) => (
-	<BaseSchemaDecl {...getSchemaArgs(ctx, props)}>
-		<Statement>return {booleanTag}:ezjson_init_bool({initializerArg})</Statement>
-	</BaseSchemaDecl>
+	<BaseSchemaDeclWithUnionArgs
+		{...getSchemaArgs(ctx, props)}
+		render={({ getTagIdVar, args }) => ([
+			<If expr={`${getTagIdVar(args[0])} == tagof(${floatTag}:)`}>
+				<Statement>return {numberTag}:ezjson_init_real({floatTag}:{initializerArg})</Statement>
+			</If>,
+			<Eol />,
+			<Statement>return {numberTag}:ezjson_init_number({initializerArg})</Statement>,
+		])}
+	/>
 );

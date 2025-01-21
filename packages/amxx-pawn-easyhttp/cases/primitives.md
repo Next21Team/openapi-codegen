@@ -66,16 +66,9 @@
 				- type: boolean
 				- type: string
 ### GENERATED OUTPUT:
-	#define __END __1 = tagof(value)
-
-	SomeMixed:some_mixed_init({Null, Number, Boolean, String}:value, __END) { 
-		if(__1 == tagof(Null:))
-			return SomeMixed:ezjson_init_null();
-
+	SomeMixed:some_mixed_init({Null, Number, Boolean, String}:value) { 
 		return SomeMixed:ezjson_deep_copy(EzJSON:value);
 	}
-
-	#undef __END
 
 	bool:some_mixed_is_null(SomeMixed:var) {
 		return ezjson_is_null(EzJSON:var)

@@ -1,11 +1,18 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types';
 import { match } from 'ts-pattern';
-import { NullDeclaration, UndefinedDeclaration } from '../shared/primitives';
+import { UndefinedDeclaration } from '../shared/primitives';
 import { generateIntegerLiteralDecl } from './integer/literal';
-import { Declaration, Eol } from '~/syntax/common';
+import { Declaration } from '~/syntax/common';
 import { generateNumberLiteralDecl } from './number/literal';
 import { generateBooleanLiteralDecl } from './boolean/literal';
 import { generateStringLiteralDecl } from './string/literal';
+import { generateNullLiteralDecl } from './null/literal';
+import { generateMixedLiteralDecl, type SyntaxContractForMixed } from './mixed/literal';
+import { NullSyntax } from './null';
+import { IntegerSyntax } from './integer';
+import { NumberSyntax } from './number';
+import { BooleanSyntax } from './boolean';
+import { StringSyntax } from './string';
 
 export interface SchemaDeclaration {
 	prototype: JSX.Element;
@@ -29,32 +36,50 @@ export function generateSchema({
 	schema,
 	// shouldResolveDependency = () => true,
 	// onDependencyResolved = () => { },
-}: GenerateSchemaArgs): GenerateSchemaReturn {
+}: GenerateSchemaArgs) {
 	const noImplementation: GenerateSchemaReturn = {
 		declarations: [{ implementation: `// [${name}] no implementation\n`, prototype: null }],
 		dependencies: [] as SchemaDeclaration[],
 	};
 
+	const generateMixedPrimitive = (...syntaxes: SyntaxContractForMixed[]): GenerateSchemaReturn => ({
+		declarations: generateMixedLiteralDecl({ name, jsDoc: schema, syntaxes }),
+		dependencies: [],
+	});
+
 	return match(schema.type)
+		.returnType<GenerateSchemaReturn>()
 		.with('integer', () => {
+			if (schema.nullable)
+				return generateMixedPrimitive(IntegerSyntax, NullSyntax);
+
 			return {
 				declarations: generateIntegerLiteralDecl({ name, jsDoc: schema }),
 				dependencies: [],
 			};
 		})
 		.with('number', () => {
+			if (schema.nullable)
+				return generateMixedPrimitive(NumberSyntax, NullSyntax);
+
 			return {
 				declarations: generateNumberLiteralDecl({ name, jsDoc: schema }),
 				dependencies: [],
 			};
 		})
 		.with('boolean', () => {
+			if (schema.nullable)
+				return generateMixedPrimitive(BooleanSyntax, NullSyntax);
+
 			return {
 				declarations: generateBooleanLiteralDecl({ name, jsDoc: schema }),
 				dependencies: [],
 			};
 		})
 		.with('string', () => {
+			if (schema.nullable)
+				return generateMixedPrimitive(StringSyntax, NullSyntax);
+
 			return {
 				declarations: generateStringLiteralDecl({ name, jsDoc: schema }),
 				dependencies: [],
@@ -67,10 +92,26 @@ export function generateSchema({
 
 export function generateGlobalSchemas(): SchemaDeclaration[] {
 	return [
-		...generateIntegerLiteralDecl({ name: 'integer' }),
-		...generateNumberLiteralDecl({ name: 'number' }),
-		...generateBooleanLiteralDecl({ name: 'boolean' }),
-		...generateStringLiteralDecl({ name: 'string' }),
+		...generateNullLiteralDecl({
+			name: 'null',
+			jsDoc: { description: 'Basic null literal' },
+		}),
+		...generateIntegerLiteralDecl({
+			name: 'integer',
+			jsDoc: { description: 'Basic integer literal' },
+		}),
+		...generateNumberLiteralDecl({
+			name: 'number',
+			jsDoc: { description: 'Basic number literal' },
+		}),
+		...generateBooleanLiteralDecl({
+			name: 'boolean',
+			jsDoc: { description: 'Basic boolean literal' },
+		}),
+		...generateStringLiteralDecl({
+			name: 'string',
+			jsDoc: { description: 'Basic string literal' },
+		}),
 	];
 }
 
@@ -78,8 +119,6 @@ export const GlobalDeclarations: JSXTE.Component = () => {
 	return (
 		<Declaration>
 			<UndefinedDeclaration />
-			<Eol />
-			<NullDeclaration />
 		</Declaration>
 	);
 };

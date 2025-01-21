@@ -4,6 +4,7 @@ import type { TagIdentifier } from './tags';
 import type { FuncIdentifier } from './function';
 import type { VarIdentifier } from './variable';
 import { camelCase, constantCase, pascalCase, pascalSnakeCase, snakeCase } from 'change-case';
+import type { ContextData } from '~/lib/jsx';
 
 type PossibleIdentifiers = TagIdentifier | FuncIdentifier | VarIdentifier;
 
@@ -70,6 +71,15 @@ export const FormattingConfig: JSXTE.Component<FormattingConfigProps> = ({
 			{children}
 		</context.Provider>
 	);
+};
+
+export interface FormattingOptionsProps {
+	render: (ctx: ContextData<typeof context>) => JSX.Element;
+}
+
+export const FormattingOptions: JSXTE.Component<FormattingOptionsProps> = ({ render }, { ctx }) => {
+	const options = ctx.getOrFail(context);
+	return render(options);
 };
 
 export { context as formattingOptionsCtx };

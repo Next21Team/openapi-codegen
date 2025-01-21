@@ -6,7 +6,7 @@ interface BaseOperator {
 }
 
 export interface InitOperatorProps extends BaseOperator {
-	jsDoc: JsdocProps;
+	jsDoc?: JsdocProps;
 };
 export type InitOperatorComponent = JSXTE.Component<InitOperatorProps>;
 

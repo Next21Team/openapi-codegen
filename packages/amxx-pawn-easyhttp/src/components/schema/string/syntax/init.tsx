@@ -2,19 +2,18 @@ import type { ContextAccessor } from '~/lib/jsx';
 import { BaseSchemaDecl, BaseSchemaProto, type BaseSchemaProtoProps } from '../../base';
 import { formattingOptionsCtx } from '~/syntax/formating-options';
 import { initializerArg } from '~/components/shared/primitives';
-import { booleanTag } from '../tag';
+import { stringTag } from '../tag';
 import type { GetOperatorProps, InitOperatorComponent } from '../../operators';
 import { Declaration, Statement } from '~/syntax/common';
 import { JsDoc } from '~/components/shared/jsdoc';
-import { boolTag } from '~/syntax/tags';
 
 const getSchemaArgs = (ctx: ContextAccessor, { name }: GetOperatorProps): BaseSchemaProtoProps => {
 	const { toFunc } = ctx.getOrFail(formattingOptionsCtx);
 
 	return {
-		tag: booleanTag,
+		tag: stringTag,
 		identifier: toFunc(name),
-		args: [{ type: 'single', const: true, tag: boolTag, name: initializerArg }],
+		args: [{ type: 'single', const: true, name: initializerArg, array: true }],
 	};
 };
 
@@ -23,7 +22,7 @@ export const InitOperatorProto: InitOperatorComponent = (props, { ctx }) => (
 		<JsDoc
 			{...props.jsDoc}
 			args={[{ name: initializerArg, description: 'Initializer value' }]}
-			returnExpr={`${booleanTag} primitive`}
+			returnExpr={`${stringTag} primitive`}
 		/>
 		<BaseSchemaProto {...getSchemaArgs(ctx, props)} />
 	</Declaration>
@@ -31,6 +30,6 @@ export const InitOperatorProto: InitOperatorComponent = (props, { ctx }) => (
 
 export const InitOperatorImpl: InitOperatorComponent = (props, { ctx }) => (
 	<BaseSchemaDecl {...getSchemaArgs(ctx, props)}>
-		<Statement>return {booleanTag}:ezjson_init_bool({initializerArg})</Statement>
+		<Statement>return {stringTag}:ezjson_init_string({initializerArg})</Statement>
 	</BaseSchemaDecl>
 );
