@@ -47,6 +47,15 @@ export function generateSchema({
 		dependencies: [],
 	});
 
+	const mapPrimitiveTypeToSyntax = (type: NonNullable<typeof schema.type>) =>
+		match(type)
+			.returnType<SyntaxContractForMixed | null>()
+			.with('integer', () => IntegerSyntax)
+			.with('number', () => NumberSyntax)
+			.with('boolean', () => BooleanSyntax)
+			.with('string', () => StringSyntax)
+			.otherwise(() => null);
+
 	return match(schema.type)
 		.returnType<GenerateSchemaReturn>()
 		.with('integer', () => {
@@ -86,6 +95,17 @@ export function generateSchema({
 			};
 		})
 		.otherwise(() => {
+			if (schema.oneOf) {
+				const syntaxes = schema.oneOf
+					.map(s => mapPrimitiveTypeToSyntax(s.type))
+					.filter((s): s is NonNullable<typeof s> => !!s);
+
+				if (schema.nullable)
+					syntaxes.push(NullSyntax);
+
+				return generateMixedPrimitive(...syntaxes);
+			}
+
 			return noImplementation;
 		});
 }
