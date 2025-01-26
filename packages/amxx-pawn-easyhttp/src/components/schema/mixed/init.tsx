@@ -48,7 +48,7 @@ export const InitOperatorImpl: InitOperatorComponent = (props, { ctx }) => {
 	return (
 		<BaseSchemaDecl {...schemaArgs}>
 			<Statement>
-				return {schemaArgs.tag}:ezjson_deep_copy(EzJSON:{initializerArg})
+				return {schemaArgs.tag}:{initializerArg}
 			</Statement>
 		</BaseSchemaDecl>
 	);

@@ -56,9 +56,9 @@ export function generateSchema({
 			.with('string', () => StringSyntax)
 			.otherwise(() => null);
 
-	return match(schema.type)
+	return match(schema)
 		.returnType<GenerateSchemaReturn>()
-		.with('integer', () => {
+		.with({ type: 'integer' }, () => {
 			if (schema.nullable)
 				return generateMixedPrimitive(IntegerSyntax, NullSyntax);
 
@@ -67,7 +67,7 @@ export function generateSchema({
 				dependencies: [],
 			};
 		})
-		.with('number', () => {
+		.with({ type: 'number' }, () => {
 			if (schema.nullable)
 				return generateMixedPrimitive(NumberSyntax, NullSyntax);
 
@@ -76,7 +76,7 @@ export function generateSchema({
 				dependencies: [],
 			};
 		})
-		.with('boolean', () => {
+		.with({ type: 'boolean' }, () => {
 			if (schema.nullable)
 				return generateMixedPrimitive(BooleanSyntax, NullSyntax);
 
@@ -85,7 +85,7 @@ export function generateSchema({
 				dependencies: [],
 			};
 		})
-		.with('string', () => {
+		.with({ type: 'string' }, () => {
 			if (schema.nullable)
 				return generateMixedPrimitive(StringSyntax, NullSyntax);
 
@@ -93,6 +93,9 @@ export function generateSchema({
 				declarations: generateStringLiteralDecl({ name, jsDoc: schema }),
 				dependencies: [],
 			};
+		})
+		.with({ type: 'object' }, () => {
+			return noImplementation;
 		})
 		.otherwise(() => {
 			if (schema.oneOf) {
