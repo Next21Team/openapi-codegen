@@ -13,20 +13,21 @@ import { IntegerSyntax } from './integer';
 import { NumberSyntax } from './number';
 import { BooleanSyntax } from './boolean';
 import { StringSyntax } from './string';
+import { generateObjectLiteral } from './object/literal';
 
 export interface SchemaDeclaration {
 	prototype: JSX.Element;
 	implementation: JSX.Element;
 }
 
-interface GenerateSchemaArgs {
+export interface GenerateSchemaArgs {
 	schema: OpenAPIV3.SchemaObject;
 	name: string;
-	shouldResolveDependency?: (schema: OpenAPIV3.SchemaObject) => boolean;
-	onDependencyResolved?: (declaration: SchemaDeclaration, schema: OpenAPIV3.SchemaObject) => void;
+	shouldResolveDependency: (schema: OpenAPIV3.SchemaObject) => boolean;
+	onDependencyResolved: (declaration: SchemaDeclaration, schema: OpenAPIV3.SchemaObject) => void;
 }
 
-interface GenerateSchemaReturn {
+export interface GenerateSchemaReturn {
 	declarations: SchemaDeclaration[];
 	dependencies: SchemaDeclaration[];
 }
@@ -34,8 +35,8 @@ interface GenerateSchemaReturn {
 export function generateSchema({
 	name,
 	schema,
-	// shouldResolveDependency = () => true,
-	// onDependencyResolved = () => { },
+	shouldResolveDependency,
+	onDependencyResolved,
 }: GenerateSchemaArgs) {
 	const noImplementation: GenerateSchemaReturn = {
 		declarations: [{ implementation: `// [${name}] no implementation\n`, prototype: null }],
@@ -95,7 +96,13 @@ export function generateSchema({
 			};
 		})
 		.with({ type: 'object' }, () => {
-			return noImplementation;
+			return generateObjectLiteral({
+				generateSchema,
+				name,
+				schema,
+				shouldResolveDependency,
+				onDependencyResolved,
+			});
 		})
 		.otherwise(() => {
 			if (schema.oneOf) {
