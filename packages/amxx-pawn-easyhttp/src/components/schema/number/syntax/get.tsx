@@ -1,4 +1,3 @@
-import type { ContextAccessor } from '~/lib/jsx';
 import { BaseSchemaDecl, BaseSchemaProto, type BaseSchemaProtoProps } from '../../base';
 import { schemaArg } from '~/components/shared/primitives';
 import { numberTag } from '../tag';
@@ -7,8 +6,8 @@ import type { GetOperatorComponent, GetOperatorProps } from '../../operators';
 import { Statement } from '~/syntax/common';
 import { codegenCtx } from '~/context';
 
-const getSchemaArgs = (ctx: ContextAccessor, { name }: GetOperatorProps): BaseSchemaProtoProps => {
-	const { format } = ctx.getOrFail(codegenCtx);
+const getSchemaArgs = ({ name }: GetOperatorProps): BaseSchemaProtoProps => {
+	const { format } = codegenCtx.getOrFail();
 
 	return {
 		identifier: format.toFunc(name, 'get'),
@@ -16,18 +15,18 @@ const getSchemaArgs = (ctx: ContextAccessor, { name }: GetOperatorProps): BaseSc
 	};
 };
 
-export const GetOperatorProto: GetOperatorComponent = (props, { ctx }) => (
-	<BaseSchemaProto {...getSchemaArgs(ctx, props)} />
+export const GetOperatorProto: GetOperatorComponent = props => (
+	<BaseSchemaProto {...getSchemaArgs(props)} />
 );
 
-export const GetOperatorImpl: GetOperatorComponent = (props, { ctx }) => (
-	<BaseSchemaDecl {...getSchemaArgs(ctx, props)}>
+export const GetOperatorImpl: GetOperatorComponent = props => (
+	<BaseSchemaDecl {...getSchemaArgs(props)}>
 		<Statement>return ezjson_get_number(EzJSON:{schemaArg})</Statement>
 	</BaseSchemaDecl>
 );
 
-const getRealSchemaArgs = (ctx: ContextAccessor, { name }: GetOperatorProps): BaseSchemaProtoProps => {
-	const { format } = ctx.getOrFail(codegenCtx);
+const getRealSchemaArgs = ({ name }: GetOperatorProps): BaseSchemaProtoProps => {
+	const { format } = codegenCtx.getOrFail();
 
 	return {
 		tag: floatTag,
@@ -36,12 +35,12 @@ const getRealSchemaArgs = (ctx: ContextAccessor, { name }: GetOperatorProps): Ba
 	};
 };
 
-export const GetRealOperatorProto: GetOperatorComponent = (props, { ctx }) => (
-	<BaseSchemaProto {...getRealSchemaArgs(ctx, props)} />
+export const GetRealOperatorProto: GetOperatorComponent = props => (
+	<BaseSchemaProto {...getRealSchemaArgs(props)} />
 );
 
-export const GetRealOperatorImpl: GetOperatorComponent = (props, { ctx }) => (
-	<BaseSchemaDecl {...getRealSchemaArgs(ctx, props)}>
+export const GetRealOperatorImpl: GetOperatorComponent = props => (
+	<BaseSchemaDecl {...getRealSchemaArgs(props)}>
 		<Statement>return ezjson_get_real(EzJSON:{schemaArg})</Statement>
 	</BaseSchemaDecl>
 );

@@ -3,12 +3,12 @@ import {
 	BaseSchemaProto,
 	type BaseSchemaProtoProps,
 } from '../../base';
+
 import {
 	type IsOperatorComponent,
 	type IsOperatorProps,
 } from '../../operators';
 
-import type { ContextAccessor } from '~/lib/jsx';
 import { boolTag, floatTag } from '~/syntax/tags';
 import { initializerArg, schemaArg } from '~/components/shared/primitives';
 import { If } from '~/syntax/if-else';
@@ -16,8 +16,8 @@ import { Eol, Statement } from '~/syntax/common';
 import { numberTag } from '../tag';
 import { codegenCtx } from '~/context';
 
-const getSchemaArgs = (ctx: ContextAccessor, { name, varTag }: IsOperatorProps) => {
-	const { format } = ctx.getOrFail(codegenCtx);
+const getSchemaArgs = ({ name, varTag }: IsOperatorProps) => {
+	const { format } = codegenCtx.getOrFail();
 	const floatInitializerArg = format.toVar('float', initializerArg);
 
 	return {
@@ -34,12 +34,12 @@ const getSchemaArgs = (ctx: ContextAccessor, { name, varTag }: IsOperatorProps) 
 	};
 };
 
-export const IsOperatorProto: IsOperatorComponent = (props, { ctx }) => (
-	<BaseSchemaProto {...getSchemaArgs(ctx, props).schemaArgs} />
+export const IsOperatorProto: IsOperatorComponent = props => (
+	<BaseSchemaProto {...getSchemaArgs(props).schemaArgs} />
 );
 
-export const IsOperatorImpl: IsOperatorComponent = (props, { ctx }) => {
-	const { schemaArgs, floatInitializerArg } = getSchemaArgs(ctx, props);
+export const IsOperatorImpl: IsOperatorComponent = (props) => {
+	const { schemaArgs, floatInitializerArg } = getSchemaArgs(props);
 
 	return (
 		<BaseSchemaDecl {...schemaArgs}>

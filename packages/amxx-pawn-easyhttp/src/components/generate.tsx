@@ -9,32 +9,34 @@ import {
 import { Declaration, Eol } from '~/syntax/common';
 
 export function generateComponents() {
+	const { document } = codegenCtx.getOrFail();
+
 	const generatedSchemas = new Map<object, SchemaDeclaration>();
 	const sections: SchemaDeclaration[] = [];
 
-	const { document } = codegenCtx.getOrFail();
+	const pushToSections = (...declarations: SchemaDeclaration[]) => {
+		declarations.forEach((decl) => {
+			sections.push(decl);
+
+			if (decl.dependencies?.length)
+				pushToSections(...decl.dependencies);
+		});
+	};
 
 	const globalDeclarations = generateGlobalSchemas();
-	sections.push(...globalDeclarations);
+	pushToSections(...globalDeclarations);
 
 	Object.entries(document.components?.schemas ?? {})
 		.forEach(([name, schema]) => {
-			const declarations = generateSchema({
+			const declaration = generateSchema({
 				schema,
 				name: `${name} schema`,
 				resolveDependency: schema => generatedSchemas.get(schema) ?? null,
 				onDependencyResolved: (declaration, schema) => generatedSchemas.set(schema, declaration),
 			});
 
-			const pushToSections = (declarations: SchemaDeclaration[]) => {
-				declarations.forEach((decl) => {
-					sections.push(decl);
-					if (decl.dependencies)
-						pushToSections(decl.dependencies);
-				});
-			};
-
-			pushToSections(declarations);
+			generatedSchemas.set(schema, declaration);
+			pushToSections(declaration);
 		});
 
 	return {

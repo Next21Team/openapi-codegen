@@ -10,8 +10,8 @@ export const Line: JSXTE.Component = ({ children }) => (
 	</Declaration>
 );
 
-export const Statement: JSXTE.Component = ({ children }, { ctx }) => {
-	const { format } = ctx.getOrFail(codegenCtx);
+export const Statement: JSXTE.Component = ({ children }) => {
+	const { format } = codegenCtx.getOrFail();
 
 	return (
 		<Line>

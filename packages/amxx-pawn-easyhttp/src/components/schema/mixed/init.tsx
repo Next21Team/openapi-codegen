@@ -1,6 +1,5 @@
 import { BaseSchemaDecl, BaseSchemaProto, type BaseSchemaProtoProps } from '../base';
 import type { GenerateMixedLiteralProps } from './literal';
-import type { ContextAccessor } from '~/lib/jsx';
 import { initializerArg } from '~/components/shared/primitives';
 import { Declaration, Statement } from '~/syntax/common';
 import { JsDoc } from '~/components/shared/jsdoc';
@@ -10,10 +9,9 @@ type InitOperatorComponentProps = Pick<GenerateMixedLiteralProps, 'name' | 'synt
 type InitOperatorComponent = JSXTE.Component<InitOperatorComponentProps>;
 
 const getSchemaArgs = (
-	ctx: ContextAccessor,
 	{ name, syntaxes }: Omit<InitOperatorComponentProps, 'jsDoc'>,
 ): BaseSchemaProtoProps => {
-	const { format } = ctx.getOrFail(codegenCtx);
+	const { format } = codegenCtx.getOrFail();
 
 	return {
 		tag: format.toTag(name),
@@ -27,8 +25,8 @@ const getSchemaArgs = (
 	};
 };
 
-export const InitOperatorProto: InitOperatorComponent = (props, { ctx }) => {
-	const schemaArgs = getSchemaArgs(ctx, props);
+export const InitOperatorProto: InitOperatorComponent = (props) => {
+	const schemaArgs = getSchemaArgs(props);
 
 	return (
 		<Declaration>
@@ -42,8 +40,8 @@ export const InitOperatorProto: InitOperatorComponent = (props, { ctx }) => {
 	);
 };
 
-export const InitOperatorImpl: InitOperatorComponent = (props, { ctx }) => {
-	const schemaArgs = getSchemaArgs(ctx, props);
+export const InitOperatorImpl: InitOperatorComponent = (props) => {
+	const schemaArgs = getSchemaArgs(props);
 
 	return (
 		<BaseSchemaDecl {...schemaArgs}>

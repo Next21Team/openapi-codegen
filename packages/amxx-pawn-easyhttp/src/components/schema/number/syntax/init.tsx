@@ -1,4 +1,3 @@
-import type { ContextAccessor } from '~/lib/jsx';
 import { BaseSchemaDeclWithUnionArgs, BaseSchemaProto, type BaseSchemaProtoProps } from '../../base';
 import { initializerArg } from '~/components/shared/primitives';
 import { numberTag } from '../tag';
@@ -9,8 +8,8 @@ import { JsDoc } from '~/components/shared/jsdoc';
 import { If } from '~/syntax/if-else';
 import { codegenCtx } from '~/context';
 
-const getSchemaArgs = (ctx: ContextAccessor, { name }: GetOperatorProps): BaseSchemaProtoProps => {
-	const { format } = ctx.getOrFail(codegenCtx);
+const getSchemaArgs = ({ name }: GetOperatorProps): BaseSchemaProtoProps => {
+	const { format } = codegenCtx.getOrFail();
 
 	return {
 		tag: numberTag,
@@ -19,20 +18,20 @@ const getSchemaArgs = (ctx: ContextAccessor, { name }: GetOperatorProps): BaseSc
 	};
 };
 
-export const InitOperatorProto: InitOperatorComponent = (props, { ctx }) => (
+export const InitOperatorProto: InitOperatorComponent = props => (
 	<Declaration>
 		<JsDoc
 			{...props.jsDoc}
 			args={[{ name: initializerArg, description: 'Initializer value' }]}
 			returnExpr={`${numberTag} primitive`}
 		/>
-		<BaseSchemaProto {...getSchemaArgs(ctx, props)} />
+		<BaseSchemaProto {...getSchemaArgs(props)} />
 	</Declaration>
 );
 
-export const InitOperatorImpl: InitOperatorComponent = (props, { ctx }) => (
+export const InitOperatorImpl: InitOperatorComponent = props => (
 	<BaseSchemaDeclWithUnionArgs
-		{...getSchemaArgs(ctx, props)}
+		{...getSchemaArgs(props)}
 		render={({ getTagIdVar, args }) => ([
 			<If expr={`${getTagIdVar(args[0])} == tagof(${floatTag}:)`}>
 				<Statement>return {numberTag}:ezjson_init_real({floatTag}:{initializerArg})</Statement>

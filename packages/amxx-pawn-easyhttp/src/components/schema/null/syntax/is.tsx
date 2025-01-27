@@ -9,15 +9,14 @@ import {
 	type IsOperatorProps,
 } from '../../operators';
 
-import type { ContextAccessor } from '~/lib/jsx';
 import { boolTag } from '~/syntax/tags';
 import { schemaArg } from '~/components/shared/primitives';
 import { Statement } from '~/syntax/common';
 import { nullTag } from '../tag';
 import { codegenCtx } from '~/context';
 
-const getSchemaArgs = (ctx: ContextAccessor, { name, varTag }: IsOperatorProps): BaseSchemaProtoProps => {
-	const { format } = ctx.getOrFail(codegenCtx);
+const getSchemaArgs = ({ name, varTag }: IsOperatorProps): BaseSchemaProtoProps => {
+	const { format } = codegenCtx.getOrFail();
 
 	return {
 		tag: boolTag,
@@ -28,12 +27,12 @@ const getSchemaArgs = (ctx: ContextAccessor, { name, varTag }: IsOperatorProps):
 	};
 };
 
-export const IsOperatorProto: IsOperatorComponent = (props, { ctx }) => (
-	<BaseSchemaProto {...getSchemaArgs(ctx, props)} />
+export const IsOperatorProto: IsOperatorComponent = props => (
+	<BaseSchemaProto {...getSchemaArgs(props)} />
 );
 
-export const IsOperatorImpl: IsOperatorComponent = (props, { ctx }) => (
-	<BaseSchemaDecl {...getSchemaArgs(ctx, props)}>
+export const IsOperatorImpl: IsOperatorComponent = props => (
+	<BaseSchemaDecl {...getSchemaArgs(props)}>
 		<Statement>
 			return ezjson_is_null(EzJSON:{schemaArg})
 		</Statement>

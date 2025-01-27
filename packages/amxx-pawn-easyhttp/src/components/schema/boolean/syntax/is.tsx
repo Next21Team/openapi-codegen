@@ -9,7 +9,6 @@ import {
 	type IsOperatorProps,
 } from '../../operators';
 
-import type { ContextAccessor } from '~/lib/jsx';
 import { boolTag } from '~/syntax/tags';
 import { initializerArg, schemaArg } from '~/components/shared/primitives';
 import { If } from '~/syntax/if-else';
@@ -17,8 +16,8 @@ import { Eol, Statement } from '~/syntax/common';
 import { booleanTag } from '../tag';
 import { codegenCtx } from '~/context';
 
-const getSchemaArgs = (ctx: ContextAccessor, { name, varTag }: IsOperatorProps): BaseSchemaProtoProps => {
-	const { format } = ctx.getOrFail(codegenCtx);
+const getSchemaArgs = ({ name, varTag }: IsOperatorProps): BaseSchemaProtoProps => {
+	const { format } = codegenCtx.getOrFail();
 
 	return {
 		tag: boolTag,
@@ -30,12 +29,12 @@ const getSchemaArgs = (ctx: ContextAccessor, { name, varTag }: IsOperatorProps):
 	};
 };
 
-export const IsOperatorProto: IsOperatorComponent = (props, { ctx }) => (
-	<BaseSchemaProto {...getSchemaArgs(ctx, props)} />
+export const IsOperatorProto: IsOperatorComponent = props => (
+	<BaseSchemaProto {...getSchemaArgs(props)} />
 );
 
-export const IsOperatorImpl: IsOperatorComponent = (props, { ctx }) => (
-	<BaseSchemaDecl {...getSchemaArgs(ctx, props)}>
+export const IsOperatorImpl: IsOperatorComponent = props => (
+	<BaseSchemaDecl {...getSchemaArgs(props)}>
 		<If expr={`!ezjson_is_bool(EzJSON:${schemaArg})`}>
 			<Statement>return false</Statement>
 		</If>

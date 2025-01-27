@@ -29,17 +29,17 @@ export interface GenerateSchemaArgs {
 	onDependencyResolved: (declaration: SchemaDeclaration, schema: OpenAPIV3.SchemaObject) => void;
 }
 
-export type GenerateSchemaReturn = SchemaDeclaration[];
+export type GenerateSchemaReturn = SchemaDeclaration;
 
 export function generateSchema({
 	name,
 	schema,
-	resolveDependency: shouldResolveDependency,
+	resolveDependency,
 	onDependencyResolved,
 }: GenerateSchemaArgs) {
-	const noImplementation: GenerateSchemaReturn = [
-		{ implementation: `// [${name}] no implementation\n`, prototype: null },
-	];
+	const noImplementation: GenerateSchemaReturn = {
+		implementation: `// [${name}] no implementation\n`, prototype: null,
+	};
 
 	const generateMixedPrimitive = (...syntaxes: SyntaxContractForMixed[]) =>
 		generateMixedLiteralDecl({ name, jsDoc: schema, syntaxes });
@@ -75,7 +75,7 @@ export function generateSchema({
 				generateSchema,
 				name,
 				schema,
-				resolveDependency: shouldResolveDependency,
+				resolveDependency,
 				onDependencyResolved,
 			});
 		})
@@ -97,23 +97,23 @@ export function generateSchema({
 
 export function generateGlobalSchemas(): SchemaDeclaration[] {
 	return [
-		...generateNullLiteralDecl({
+		generateNullLiteralDecl({
 			name: 'null',
 			jsDoc: { description: 'Basic null literal' },
 		}),
-		...generateIntegerLiteralDecl({
+		generateIntegerLiteralDecl({
 			name: 'integer',
 			jsDoc: { description: 'Basic integer literal' },
 		}),
-		...generateNumberLiteralDecl({
+		generateNumberLiteralDecl({
 			name: 'number',
 			jsDoc: { description: 'Basic number literal' },
 		}),
-		...generateBooleanLiteralDecl({
+		generateBooleanLiteralDecl({
 			name: 'boolean',
 			jsDoc: { description: 'Basic boolean literal' },
 		}),
-		...generateStringLiteralDecl({
+		generateStringLiteralDecl({
 			name: 'string',
 			jsDoc: { description: 'Basic string literal' },
 		}),

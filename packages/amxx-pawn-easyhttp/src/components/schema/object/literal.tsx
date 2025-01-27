@@ -7,10 +7,8 @@ export interface GenerateObjectLiteralArgs extends GenerateSchemaArgs {
 }
 
 export const generateObjectLiteral = (args: GenerateObjectLiteralArgs): GenerateSchemaReturn => {
-	return [
-		{
-			prototype: withArgsContext(Syntax.InitOperatorProto, args),
-			implementation: withArgsContext(Syntax.InitOperatorImpl, args),
-		},
-	];
+	return {
+		prototype: withArgsContext(Syntax.InitOperatorProto, args),
+		implementation: withArgsContext(Syntax.InitOperatorImpl, args),
+	};
 };

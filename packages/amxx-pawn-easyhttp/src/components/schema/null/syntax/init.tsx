@@ -1,4 +1,3 @@
-import type { ContextAccessor } from '~/lib/jsx';
 import { BaseSchemaDecl, BaseSchemaProto, type BaseSchemaProtoProps } from '../../base';
 import { nullTag } from '../tag';
 import type { GetOperatorProps, InitOperatorComponent } from '../../operators';
@@ -6,8 +5,8 @@ import { Declaration, Statement } from '~/syntax/common';
 import { JsDoc } from '~/components/shared/jsdoc';
 import { codegenCtx } from '~/context';
 
-const getSchemaArgs = (ctx: ContextAccessor, { name }: GetOperatorProps): BaseSchemaProtoProps => {
-	const { format } = ctx.getOrFail(codegenCtx);
+const getSchemaArgs = ({ name }: GetOperatorProps): BaseSchemaProtoProps => {
+	const { format } = codegenCtx.getOrFail();
 
 	return {
 		tag: nullTag,
@@ -15,18 +14,18 @@ const getSchemaArgs = (ctx: ContextAccessor, { name }: GetOperatorProps): BaseSc
 	};
 };
 
-export const InitOperatorProto: InitOperatorComponent = (props, { ctx }) => (
+export const InitOperatorProto: InitOperatorComponent = props => (
 	<Declaration>
 		<JsDoc
 			{...props.jsDoc}
 			returnExpr={`${nullTag} primitive`}
 		/>
-		<BaseSchemaProto {...getSchemaArgs(ctx, props)} />
+		<BaseSchemaProto {...getSchemaArgs(props)} />
 	</Declaration>
 );
 
-export const InitOperatorImpl: InitOperatorComponent = (props, { ctx }) => (
-	<BaseSchemaDecl {...getSchemaArgs(ctx, props)}>
+export const InitOperatorImpl: InitOperatorComponent = props => (
+	<BaseSchemaDecl {...getSchemaArgs(props)}>
 		<Statement>return {nullTag}:ezjson_init_null()</Statement>
 	</BaseSchemaDecl>
 );

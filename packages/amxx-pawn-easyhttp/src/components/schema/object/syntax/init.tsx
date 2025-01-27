@@ -8,7 +8,7 @@ import { codegenCtx } from '~/context';
 
 const getProtoProps = (ctx: ContextAccessor) => {
 	const { name } = ctx.getOrFail(argsCtx);
-	const { format } = ctx.getOrFail(codegenCtx);
+	const { format } = codegenCtx.getOrFail();
 
 	return {
 		tag: format.toTag(name),

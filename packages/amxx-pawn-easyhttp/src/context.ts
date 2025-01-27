@@ -1,5 +1,4 @@
 import type { CodegenApi } from '@oas-codegen/core';
-import { defineContext } from 'jsxte';
 import { createContext } from 'context';
 import type { Formatter } from './formating-options';
 
@@ -12,10 +11,7 @@ const {
 	useX: getOrFail,
 } = createContext<Context>();
 
-const context = Object.assign(
-	defineContext<Context>(),
-	{ run, getOrFail },
-);
-
-export const CodegenContext = context.Provider;
-export { context as codegenCtx };
+export const codegenCtx = {
+	run,
+	getOrFail,
+};

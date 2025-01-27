@@ -1,4 +1,3 @@
-import type { ContextAccessor } from '~/lib/jsx';
 import { BaseSchemaDecl, BaseSchemaProto, type BaseSchemaProtoProps } from '../../base';
 import { schemaArg } from '~/components/shared/primitives';
 import { booleanTag } from '../tag';
@@ -7,8 +6,8 @@ import { Statement } from '~/syntax/common';
 import { boolTag } from '~/syntax/tags';
 import { codegenCtx } from '~/context';
 
-const getSchemaArgs = (ctx: ContextAccessor, { name }: GetOperatorProps): BaseSchemaProtoProps => {
-	const { format } = ctx.getOrFail(codegenCtx);
+const getSchemaArgs = ({ name }: GetOperatorProps): BaseSchemaProtoProps => {
+	const { format } = codegenCtx.getOrFail();
 
 	return {
 		tag: boolTag,
@@ -17,12 +16,12 @@ const getSchemaArgs = (ctx: ContextAccessor, { name }: GetOperatorProps): BaseSc
 	};
 };
 
-export const GetOperatorProto: GetOperatorComponent = (props, { ctx }) => (
-	<BaseSchemaProto {...getSchemaArgs(ctx, props)} />
+export const GetOperatorProto: GetOperatorComponent = props => (
+	<BaseSchemaProto {...getSchemaArgs(props)} />
 );
 
-export const GetOperatorImpl: GetOperatorComponent = (props, { ctx }) => (
-	<BaseSchemaDecl {...getSchemaArgs(ctx, props)}>
+export const GetOperatorImpl: GetOperatorComponent = props => (
+	<BaseSchemaDecl {...getSchemaArgs(props)}>
 		<Statement>return ezjson_get_bool(EzJSON:{schemaArg})</Statement>
 	</BaseSchemaDecl>
 );

@@ -14,16 +14,14 @@ export interface GenerateMixedLiteralProps extends InitOperatorProps, GetOperato
 	syntaxes: SyntaxContract[];
 }
 
-export const generateMixedLiteralDecl = (props: GenerateMixedLiteralProps): SchemaDeclaration[] => {
+export const generateMixedLiteralDecl = (props: GenerateMixedLiteralProps): SchemaDeclaration => {
 	const { syntaxes, name } = props;
 	const { format } = codegenCtx.getOrFail();
 
-	return [
-		{
-			prototype: <InitOperatorProto {...props} />,
-			implementation: <InitOperatorImpl {...props} />,
-		},
-		...syntaxes.map(syntax => ({
+	return {
+		prototype: <InitOperatorProto {...props} />,
+		implementation: <InitOperatorImpl {...props} />,
+		dependencies: syntaxes.map(syntax => ({
 			prototype: (
 				<syntax.IsOperatorProto
 					name={name}
@@ -37,7 +35,7 @@ export const generateMixedLiteralDecl = (props: GenerateMixedLiteralProps): Sche
 				/>
 			),
 		})),
-	];
+	};
 };
 
 export { type SyntaxContract as SyntaxContractForMixed };

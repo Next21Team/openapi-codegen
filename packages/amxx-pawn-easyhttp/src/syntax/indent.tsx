@@ -11,7 +11,7 @@ interface SymbolProp {
 export const Indent: JSXTE.Component<SymbolProp> = ({ children, symbol }, { ctx }) => {
 	const indent = ctx.get(indentContext) ?? 0;
 	const tree = Array.isArray(children) ? children : [children];
-	const { format } = ctx.getOrFail(codegenCtx);
+	const { format } = codegenCtx.getOrFail();
 	const indentSymbol = symbol ?? format.indentSymbol;
 
 	return (

@@ -4,11 +4,9 @@ import { Syntax } from './syntax';
 
 export const generateNullLiteralDecl = (
 	props: InitOperatorProps & GetOperatorProps,
-): SchemaDeclaration[] => {
-	return [
-		{
-			prototype: <Syntax.InitOperatorProto {...props} />,
-			implementation: <Syntax.InitOperatorImpl {...props} />,
-		},
-	];
+): SchemaDeclaration => {
+	return {
+		prototype: <Syntax.InitOperatorProto {...props} />,
+		implementation: <Syntax.InitOperatorImpl {...props} />,
+	};
 };

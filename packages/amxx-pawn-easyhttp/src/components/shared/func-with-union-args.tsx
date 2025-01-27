@@ -14,8 +14,8 @@ export interface FunctionDeclWithUnionArgsProps extends Omit<FunctionProps, 'chi
 }
 
 export const FunctionDeclWithUnionArgs: JSXTE.FunctionalComponent<FunctionDeclWithUnionArgsProps>
-	= ({ args = [], render, ...props }, { ctx }) => {
-		const { format } = ctx.getOrFail(codegenCtx);
+	= ({ args = [], render, ...props }) => {
+		const { format } = codegenCtx.getOrFail();
 
 		const generatedTagOfs = new Map(
 			args.map(arg => ([
