@@ -1,19 +1,19 @@
 import type { ContextAccessor } from '~/lib/jsx';
 import { BaseSchemaDecl, BaseSchemaProto, type BaseSchemaProtoProps } from '../../base';
-import { formattingOptionsCtx } from '~/syntax/formating-options';
 import { initializerArg } from '~/components/shared/primitives';
 import { booleanTag } from '../tag';
 import type { GetOperatorProps, InitOperatorComponent } from '../../operators';
 import { Declaration, Statement } from '~/syntax/common';
 import { JsDoc } from '~/components/shared/jsdoc';
 import { boolTag } from '~/syntax/tags';
+import { codegenCtx } from '~/context';
 
 const getSchemaArgs = (ctx: ContextAccessor, { name }: GetOperatorProps): BaseSchemaProtoProps => {
-	const { toFunc } = ctx.getOrFail(formattingOptionsCtx);
+	const { format } = ctx.getOrFail(codegenCtx);
 
 	return {
 		tag: booleanTag,
-		identifier: toFunc(name),
+		identifier: format.toFunc(name),
 		args: [{ type: 'single', const: true, tag: boolTag, name: initializerArg }],
 	};
 };

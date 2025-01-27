@@ -1,6 +1,6 @@
 import { defineContext } from 'jsxte';
-import { formattingOptionsCtx } from './formating-options';
 import { isTagElement } from '~/lib/jsx';
+import { codegenCtx } from '~/context';
 
 const indentContext = defineContext<number>();
 
@@ -11,8 +11,8 @@ interface SymbolProp {
 export const Indent: JSXTE.Component<SymbolProp> = ({ children, symbol }, { ctx }) => {
 	const indent = ctx.get(indentContext) ?? 0;
 	const tree = Array.isArray(children) ? children : [children];
-	const { indentSymbol: configIndentSymbol } = ctx.getOrFail(formattingOptionsCtx);
-	const indentSymbol = symbol ?? configIndentSymbol;
+	const { format } = ctx.getOrFail(codegenCtx);
+	const indentSymbol = symbol ?? format.indentSymbol;
 
 	return (
 		<>

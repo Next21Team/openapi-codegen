@@ -1,8 +1,8 @@
 import { transformRenderProp, type MaybeRenderProp } from '~/lib/jsx';
 import { LimitedDefine } from '~/syntax/directives/define';
-import { formattingOptionsCtx } from '~/syntax/formating-options';
 import { FunctionDecl, type FuncArgument, type FunctionProps } from '~/syntax/function';
 import type { VarIdentifier } from '~/syntax/variable';
+import { codegenCtx } from '~/context';
 
 const macroName = '__END';
 
@@ -15,12 +15,12 @@ export interface FunctionDeclWithUnionArgsProps extends Omit<FunctionProps, 'chi
 
 export const FunctionDeclWithUnionArgs: JSXTE.FunctionalComponent<FunctionDeclWithUnionArgsProps>
 	= ({ args = [], render, ...props }, { ctx }) => {
-		const { toVar } = ctx.getOrFail(formattingOptionsCtx);
+		const { format } = ctx.getOrFail(codegenCtx);
 
 		const generatedTagOfs = new Map(
 			args.map(arg => ([
 				arg,
-				arg.type !== 'macro' ? toVar('__', arg.name, 'tag id') : undefined,
+				arg.type !== 'macro' ? format.toVar('__', arg.name, 'tag id') : undefined,
 			])),
 		);
 

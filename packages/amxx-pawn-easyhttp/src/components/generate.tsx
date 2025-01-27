@@ -1,3 +1,4 @@
+import { codegenCtx } from '~/context';
 import {
 	generateGlobalSchemas,
 	generateSchema,
@@ -6,27 +7,34 @@ import {
 } from './schema/generate';
 
 import { Declaration, Eol } from '~/syntax/common';
-import type { Context } from '~/context';
 
-export function generateComponents(ctx: Context) {
-	const generatedComponents = new Set<object>();
+export function generateComponents() {
+	const generatedSchemas = new Map<object, SchemaDeclaration>();
 	const sections: SchemaDeclaration[] = [];
 
-	const { document } = ctx;
+	const { document } = codegenCtx.getOrFail();
 
 	const globalDeclarations = generateGlobalSchemas();
 	sections.push(...globalDeclarations);
 
 	Object.entries(document.components?.schemas ?? {})
 		.forEach(([name, schema]) => {
-			const { declarations, dependencies } = generateSchema({
+			const declarations = generateSchema({
 				schema,
 				name: `${name} schema`,
-				shouldResolveDependency: schema => !generatedComponents.has(schema),
-				onDependencyResolved: (declaration, schema) => generatedComponents.add(schema),
+				resolveDependency: schema => generatedSchemas.get(schema) ?? null,
+				onDependencyResolved: (declaration, schema) => generatedSchemas.set(schema, declaration),
 			});
 
-			dependencies.concat(declarations).forEach(decl => sections.push(decl));
+			const pushToSections = (declarations: SchemaDeclaration[]) => {
+				declarations.forEach((decl) => {
+					sections.push(decl);
+					if (decl.dependencies)
+						pushToSections(decl.dependencies);
+				});
+			};
+
+			pushToSections(declarations);
 		});
 
 	return {

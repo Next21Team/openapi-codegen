@@ -1,6 +1,5 @@
 import type { ContextAccessor } from '~/lib/jsx';
 import { BaseSchemaDeclWithUnionArgs, BaseSchemaProto, type BaseSchemaProtoProps } from '../../base';
-import { formattingOptionsCtx } from '~/syntax/formating-options';
 import { initializerArg } from '~/components/shared/primitives';
 import { numberTag } from '../tag';
 import { floatTag, intTag } from '~/syntax/tags';
@@ -8,13 +7,14 @@ import type { GetOperatorProps, InitOperatorComponent } from '../../operators';
 import { Declaration, Eol, Statement } from '~/syntax/common';
 import { JsDoc } from '~/components/shared/jsdoc';
 import { If } from '~/syntax/if-else';
+import { codegenCtx } from '~/context';
 
 const getSchemaArgs = (ctx: ContextAccessor, { name }: GetOperatorProps): BaseSchemaProtoProps => {
-	const { toFunc } = ctx.getOrFail(formattingOptionsCtx);
+	const { format } = ctx.getOrFail(codegenCtx);
 
 	return {
 		tag: numberTag,
-		identifier: toFunc(name),
+		identifier: format.toFunc(name),
 		args: [{ type: 'mixed', const: true, tag: [intTag, floatTag], name: initializerArg }],
 	};
 };

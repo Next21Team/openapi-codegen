@@ -1,10 +1,10 @@
-import { formattingOptionsCtx } from '~/syntax/formating-options';
 import { BaseSchemaDecl, BaseSchemaProto, type BaseSchemaProtoProps } from '../base';
 import type { GenerateMixedLiteralProps } from './literal';
 import type { ContextAccessor } from '~/lib/jsx';
 import { initializerArg } from '~/components/shared/primitives';
 import { Declaration, Statement } from '~/syntax/common';
 import { JsDoc } from '~/components/shared/jsdoc';
+import { codegenCtx } from '~/context';
 
 type InitOperatorComponentProps = Pick<GenerateMixedLiteralProps, 'name' | 'syntaxes' | 'jsDoc'>;
 type InitOperatorComponent = JSXTE.Component<InitOperatorComponentProps>;
@@ -13,11 +13,11 @@ const getSchemaArgs = (
 	ctx: ContextAccessor,
 	{ name, syntaxes }: Omit<InitOperatorComponentProps, 'jsDoc'>,
 ): BaseSchemaProtoProps => {
-	const { toFunc, toTag } = ctx.getOrFail(formattingOptionsCtx);
+	const { format } = ctx.getOrFail(codegenCtx);
 
 	return {
-		tag: toTag(name),
-		identifier: toFunc(name),
+		tag: format.toTag(name),
+		identifier: format.toFunc(name),
 		args: [{
 			type: 'mixed',
 			const: true,

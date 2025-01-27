@@ -10,20 +10,20 @@ import {
 
 import type { ContextAccessor } from '~/lib/jsx';
 import { boolTag, floatTag } from '~/syntax/tags';
-import { formattingOptionsCtx } from '~/syntax/formating-options';
 import { initializerArg, schemaArg } from '~/components/shared/primitives';
 import { If } from '~/syntax/if-else';
 import { Eol, Statement } from '~/syntax/common';
 import { numberTag } from '../tag';
+import { codegenCtx } from '~/context';
 
 const getSchemaArgs = (ctx: ContextAccessor, { name, varTag }: IsOperatorProps) => {
-	const { toFunc, toVar } = ctx.getOrFail(formattingOptionsCtx);
-	const floatInitializerArg = toVar('float', initializerArg);
+	const { format } = ctx.getOrFail(codegenCtx);
+	const floatInitializerArg = format.toVar('float', initializerArg);
 
 	return {
 		schemaArgs: {
 			tag: boolTag,
-			identifier: toFunc(name, 'is', numberTag),
+			identifier: format.toFunc(name, 'is', numberTag),
 			args: [
 				{ type: 'single', const: true, name: schemaArg, tag: varTag },
 				{ type: 'single', ref: true, name: initializerArg, equalTo: '0' },

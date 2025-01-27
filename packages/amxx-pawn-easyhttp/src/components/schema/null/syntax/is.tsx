@@ -11,17 +11,17 @@ import {
 
 import type { ContextAccessor } from '~/lib/jsx';
 import { boolTag } from '~/syntax/tags';
-import { formattingOptionsCtx } from '~/syntax/formating-options';
 import { schemaArg } from '~/components/shared/primitives';
 import { Statement } from '~/syntax/common';
 import { nullTag } from '../tag';
+import { codegenCtx } from '~/context';
 
 const getSchemaArgs = (ctx: ContextAccessor, { name, varTag }: IsOperatorProps): BaseSchemaProtoProps => {
-	const { toFunc } = ctx.getOrFail(formattingOptionsCtx);
+	const { format } = ctx.getOrFail(codegenCtx);
 
 	return {
 		tag: boolTag,
-		identifier: toFunc(name, 'is', nullTag),
+		identifier: format.toFunc(name, 'is', nullTag),
 		args: [
 			{ type: 'single', const: true, name: schemaArg, tag: varTag },
 		],

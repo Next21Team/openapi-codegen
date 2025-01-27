@@ -110,6 +110,9 @@ importers:
       change-case:
         specifier: 'catalog:'
         version: 5.4.4
+      context:
+        specifier: ^3.0.33
+        version: 3.0.33
       jsxte:
         specifier: 'catalog:'
         version: 3.3.1
@@ -981,6 +984,9 @@ packages:
     resolution: {integrity: sha512-Qil5KwghMzlqd51UXM0b6fyaGHtOC22scxrwrz4A2882LyUMwQjnvaedN1HAeXzphspQ6CpHkzMAWxBTUruDLg==}
     engines: {node: ^14.18.0 || >=16.10.0}
 
+  context@3.0.33:
+    resolution: {integrity: sha512-9nBbXhHVKRFLYKk3oa7W+aHt/eiGm5aIMp4Y4IwQsiAO+deRtlJ72EA8m7Cvs3v7gjjBuqKljvt2eyihVHUJoQ==}
+
   conventional-changelog-angular@7.0.0:
     resolution: {integrity: sha512-ROjNchA9LgfNMTTFSIWPzebCwOGFdgkEq45EnvvrmSLvCtAw0HSmrCs7/ty+wAeYUZyNay0YMUNYFTRL72PkBQ==}
     engines: {node: '>=16'}
@@ -1831,6 +1837,9 @@ packages:
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
 
+  vest-utils@1.3.3:
+    resolution: {integrity: sha512-9y+26YXjOpv89QmEXlFrTFLUMwUjAuwpimUVgb8HS3eNuBR3HEY68o4U/sPyGTh3OEvS7N502pX82WDm1zvsaA==}
+
   webidl-conversions@4.0.2:
     resolution: {integrity: sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg==}
 
@@ -2603,6 +2612,10 @@ snapshots:
   concat-map@0.0.1: {}
 
   consola@3.3.3: {}
+
+  context@3.0.33:
+    dependencies:
+      vest-utils: 1.3.3
 
   conventional-changelog-angular@7.0.0:
     dependencies:
@@ -3433,6 +3446,8 @@ snapshots:
   uri-js@4.4.1:
     dependencies:
       punycode: 2.3.1
+
+  vest-utils@1.3.3: {}
 
   webidl-conversions@4.0.2: {}
 

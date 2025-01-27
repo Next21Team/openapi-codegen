@@ -1,18 +1,18 @@
 import type { ContextAccessor } from '~/lib/jsx';
 import { BaseSchemaDecl, BaseSchemaProto, type BaseSchemaProtoProps } from '../../base';
-import { formattingOptionsCtx } from '~/syntax/formating-options';
 import { schemaArg } from '~/components/shared/primitives';
 import { booleanTag } from '../tag';
 import type { GetOperatorComponent, GetOperatorProps } from '../../operators';
 import { Statement } from '~/syntax/common';
 import { boolTag } from '~/syntax/tags';
+import { codegenCtx } from '~/context';
 
 const getSchemaArgs = (ctx: ContextAccessor, { name }: GetOperatorProps): BaseSchemaProtoProps => {
-	const { toFunc } = ctx.getOrFail(formattingOptionsCtx);
+	const { format } = ctx.getOrFail(codegenCtx);
 
 	return {
 		tag: boolTag,
-		identifier: toFunc(name, 'get'),
+		identifier: format.toFunc(name, 'get'),
 		args: [{ type: 'single', const: true, tag: booleanTag, name: schemaArg }],
 	};
 };

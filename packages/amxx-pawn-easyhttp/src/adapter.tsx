@@ -1,22 +1,24 @@
 import { Document } from './document';
-import { CodegenContext } from './context';
+import { CodegenContext, codegenCtx } from './context';
 import { renderJsxToString } from './syntax/renderer';
 import { generateComponents } from './components/generate';
-import { FormattingConfig } from './syntax/formating-options';
+import { createFormatter } from './formating-options';
 import { Eol, Line } from './syntax/common';
 import type { LanguageAdapter } from '@oas-codegen/core';
 
 export const languageAdapter: LanguageAdapter = {
 	async generateFiles(api) {
-		const { implementations, prototypes } = generateComponents(api);
+		const ctx = Object.assign(api, {
+			format: createFormatter(),
+		});
+
+		const { implementations, prototypes } = codegenCtx.run(ctx, generateComponents);
 
 		const IncludeFile: JSXTE.Component<{ name: string }> = ({ name, children }) => (
-			<CodegenContext value={api}>
-				<FormattingConfig>
-					<Document name={name}>
-						{children}
-					</Document>
-				</FormattingConfig>
+			<CodegenContext value={ctx}>
+				<Document name={name}>
+					{children}
+				</Document>
 			</CodegenContext>
 		);
 

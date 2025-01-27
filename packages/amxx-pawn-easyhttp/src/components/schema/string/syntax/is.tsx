@@ -11,20 +11,20 @@ import {
 
 import type { ContextAccessor } from '~/lib/jsx';
 import { boolTag } from '~/syntax/tags';
-import { formattingOptionsCtx } from '~/syntax/formating-options';
 import { initializerArg, schemaArg } from '~/components/shared/primitives';
 import { If } from '~/syntax/if-else';
 import { Eol, Statement } from '~/syntax/common';
 import { stringTag } from '../tag';
+import { codegenCtx } from '~/context';
 
 const getSchemaArgs = (ctx: ContextAccessor, { name, varTag }: IsOperatorProps) => {
-	const { toFunc, toVar } = ctx.getOrFail(formattingOptionsCtx);
-	const initializerLenArg = toVar(initializerArg, 'len');
+	const { format } = ctx.getOrFail(codegenCtx);
+	const initializerLenArg = format.toVar(initializerArg, 'len');
 
 	return {
 		schemaArgs: {
 			tag: boolTag,
-			identifier: toFunc(name, 'is', stringTag),
+			identifier: format.toFunc(name, 'is', stringTag),
 			args: [
 				{ type: 'single', const: true, name: schemaArg, tag: varTag },
 				{ type: 'single', name: initializerArg, array: true },

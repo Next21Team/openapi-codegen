@@ -14,48 +14,35 @@ import { NumberSyntax } from './number';
 import { BooleanSyntax } from './boolean';
 import { StringSyntax } from './string';
 import { generateObjectLiteral } from './object/literal';
+import { mapPrimitiveTypeToSyntax } from './primitives-map';
 
 export interface SchemaDeclaration {
 	prototype: JSX.Element;
 	implementation: JSX.Element;
+	dependencies?: SchemaDeclaration[];
 }
 
 export interface GenerateSchemaArgs {
-	schema: OpenAPIV3.SchemaObject;
 	name: string;
-	shouldResolveDependency: (schema: OpenAPIV3.SchemaObject) => boolean;
+	schema: OpenAPIV3.SchemaObject;
+	resolveDependency: (schema: OpenAPIV3.SchemaObject) => SchemaDeclaration | null;
 	onDependencyResolved: (declaration: SchemaDeclaration, schema: OpenAPIV3.SchemaObject) => void;
 }
 
-export interface GenerateSchemaReturn {
-	declarations: SchemaDeclaration[];
-	dependencies: SchemaDeclaration[];
-}
+export type GenerateSchemaReturn = SchemaDeclaration[];
 
 export function generateSchema({
 	name,
 	schema,
-	shouldResolveDependency,
+	resolveDependency: shouldResolveDependency,
 	onDependencyResolved,
 }: GenerateSchemaArgs) {
-	const noImplementation: GenerateSchemaReturn = {
-		declarations: [{ implementation: `// [${name}] no implementation\n`, prototype: null }],
-		dependencies: [] as SchemaDeclaration[],
-	};
+	const noImplementation: GenerateSchemaReturn = [
+		{ implementation: `// [${name}] no implementation\n`, prototype: null },
+	];
 
-	const generateMixedPrimitive = (...syntaxes: SyntaxContractForMixed[]): GenerateSchemaReturn => ({
-		declarations: generateMixedLiteralDecl({ name, jsDoc: schema, syntaxes }),
-		dependencies: [],
-	});
-
-	const mapPrimitiveTypeToSyntax = (type: NonNullable<typeof schema.type>) =>
-		match(type)
-			.returnType<SyntaxContractForMixed | null>()
-			.with('integer', () => IntegerSyntax)
-			.with('number', () => NumberSyntax)
-			.with('boolean', () => BooleanSyntax)
-			.with('string', () => StringSyntax)
-			.otherwise(() => null);
+	const generateMixedPrimitive = (...syntaxes: SyntaxContractForMixed[]) =>
+		generateMixedLiteralDecl({ name, jsDoc: schema, syntaxes });
 
 	return match(schema)
 		.returnType<GenerateSchemaReturn>()
@@ -63,44 +50,32 @@ export function generateSchema({
 			if (schema.nullable)
 				return generateMixedPrimitive(IntegerSyntax, NullSyntax);
 
-			return {
-				declarations: generateIntegerLiteralDecl({ name, jsDoc: schema }),
-				dependencies: [],
-			};
+			return generateIntegerLiteralDecl({ name, jsDoc: schema });
 		})
 		.with({ type: 'number' }, () => {
 			if (schema.nullable)
 				return generateMixedPrimitive(NumberSyntax, NullSyntax);
 
-			return {
-				declarations: generateNumberLiteralDecl({ name, jsDoc: schema }),
-				dependencies: [],
-			};
+			return generateNumberLiteralDecl({ name, jsDoc: schema });
 		})
 		.with({ type: 'boolean' }, () => {
 			if (schema.nullable)
 				return generateMixedPrimitive(BooleanSyntax, NullSyntax);
 
-			return {
-				declarations: generateBooleanLiteralDecl({ name, jsDoc: schema }),
-				dependencies: [],
-			};
+			return generateBooleanLiteralDecl({ name, jsDoc: schema });
 		})
 		.with({ type: 'string' }, () => {
 			if (schema.nullable)
 				return generateMixedPrimitive(StringSyntax, NullSyntax);
 
-			return {
-				declarations: generateStringLiteralDecl({ name, jsDoc: schema }),
-				dependencies: [],
-			};
+			return generateStringLiteralDecl({ name, jsDoc: schema });
 		})
 		.with({ type: 'object' }, () => {
 			return generateObjectLiteral({
 				generateSchema,
 				name,
 				schema,
-				shouldResolveDependency,
+				resolveDependency: shouldResolveDependency,
 				onDependencyResolved,
 			});
 		})

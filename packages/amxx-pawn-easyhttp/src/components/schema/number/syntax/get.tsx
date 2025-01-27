@@ -1,17 +1,17 @@
 import type { ContextAccessor } from '~/lib/jsx';
 import { BaseSchemaDecl, BaseSchemaProto, type BaseSchemaProtoProps } from '../../base';
-import { formattingOptionsCtx } from '~/syntax/formating-options';
 import { schemaArg } from '~/components/shared/primitives';
 import { numberTag } from '../tag';
 import { floatTag } from '~/syntax/tags';
 import type { GetOperatorComponent, GetOperatorProps } from '../../operators';
 import { Statement } from '~/syntax/common';
+import { codegenCtx } from '~/context';
 
 const getSchemaArgs = (ctx: ContextAccessor, { name }: GetOperatorProps): BaseSchemaProtoProps => {
-	const { toFunc } = ctx.getOrFail(formattingOptionsCtx);
+	const { format } = ctx.getOrFail(codegenCtx);
 
 	return {
-		identifier: toFunc(name, 'get'),
+		identifier: format.toFunc(name, 'get'),
 		args: [{ type: 'single', const: true, tag: numberTag, name: schemaArg }],
 	};
 };
@@ -27,11 +27,11 @@ export const GetOperatorImpl: GetOperatorComponent = (props, { ctx }) => (
 );
 
 const getRealSchemaArgs = (ctx: ContextAccessor, { name }: GetOperatorProps): BaseSchemaProtoProps => {
-	const { toFunc } = ctx.getOrFail(formattingOptionsCtx);
+	const { format } = ctx.getOrFail(codegenCtx);
 
 	return {
 		tag: floatTag,
-		identifier: toFunc(name, 'get', 'real'),
+		identifier: format.toFunc(name, 'get', 'real'),
 		args: [{ type: 'single', const: true, tag: numberTag, name: schemaArg }],
 	};
 };

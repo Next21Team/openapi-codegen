@@ -12,6 +12,7 @@
 	"dependencies": {
 		"@oas-codegen/core": "workspace:*",
 		"change-case": "catalog:",
+		"context": "^3.0.33",
 		"jsxte": "catalog:",
 		"ts-pattern": "catalog:",
 		"zod": "catalog:"

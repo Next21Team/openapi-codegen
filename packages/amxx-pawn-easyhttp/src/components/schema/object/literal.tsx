@@ -1,17 +1,16 @@
 import type { generateSchema, GenerateSchemaArgs, GenerateSchemaReturn } from '../generate';
+import { withArgsContext } from './context';
+import { Syntax } from './syntax';
 
-interface GenerateObjectLiteralArgs extends GenerateSchemaArgs {
+export interface GenerateObjectLiteralArgs extends GenerateSchemaArgs {
 	generateSchema: typeof generateSchema;
 }
 
-export const generateObjectLiteral = ({
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	generateSchema,
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	...args
-}: GenerateObjectLiteralArgs): GenerateSchemaReturn => {
-	return {
-		declarations: [],
-		dependencies: [],
-	};
+export const generateObjectLiteral = (args: GenerateObjectLiteralArgs): GenerateSchemaReturn => {
+	return [
+		{
+			prototype: withArgsContext(Syntax.InitOperatorProto, args),
+			implementation: withArgsContext(Syntax.InitOperatorImpl, args),
+		},
+	];
 };

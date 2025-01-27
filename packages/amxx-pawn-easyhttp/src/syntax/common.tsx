@@ -1,6 +1,6 @@
 import { Fragment } from 'jsxte/jsx-runtime';
-import { formattingOptionsCtx } from './formating-options';
 import { Indent, Tab } from './indent';
+import { codegenCtx } from '~/context';
 
 export const Eol: JSXTE.Component<{ repeat?: number }> = ({ repeat = 1 }) => '\n'.repeat(repeat);
 
@@ -11,11 +11,11 @@ export const Line: JSXTE.Component = ({ children }) => (
 );
 
 export const Statement: JSXTE.Component = ({ children }, { ctx }) => {
-	const { semicolon } = ctx.getOrFail(formattingOptionsCtx);
+	const { format } = ctx.getOrFail(codegenCtx);
 
 	return (
 		<Line>
-			{children}{semicolon}
+			{children}{format.semicolon}
 		</Line>
 	);
 };
