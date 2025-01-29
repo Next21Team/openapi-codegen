@@ -3,6 +3,8 @@ import type { SchemaDeclaration } from '../generate';
 import type { GetOperatorProps, InitOperatorProps, IsOperatorComponent } from '../operators';
 import { InitOperatorImpl, InitOperatorProto } from './init';
 import { codegenCtx } from '~/context';
+import { buildSchemaName } from '../name';
+import { buildSchemaTag } from '../tag';
 
 interface SyntaxContract {
 	tag: TagIdentifier;
@@ -19,6 +21,8 @@ export const generateMixedLiteralDecl = (props: GenerateMixedLiteralProps): Sche
 	const { format } = codegenCtx.getOrFail();
 
 	return {
+		tag: buildSchemaTag(name),
+		name: buildSchemaName(props.name),
 		prototype: <InitOperatorProto {...props} />,
 		implementation: <InitOperatorImpl {...props} />,
 		dependencies: syntaxes.map(syntax => ({

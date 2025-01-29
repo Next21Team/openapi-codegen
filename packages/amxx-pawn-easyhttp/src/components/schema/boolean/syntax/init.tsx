@@ -5,14 +5,12 @@ import type { GetOperatorProps, InitOperatorComponent } from '../../operators';
 import { Declaration, Statement } from '~/syntax/common';
 import { JsDoc } from '~/components/shared/jsdoc';
 import { boolTag } from '~/syntax/tags';
-import { codegenCtx } from '~/context';
+import { buildSchemaName } from '../../name';
 
 const getSchemaArgs = ({ name }: GetOperatorProps): BaseSchemaProtoProps => {
-	const { format } = codegenCtx.getOrFail();
-
 	return {
 		tag: booleanTag,
-		identifier: format.toFunc(name),
+		identifier: buildSchemaName(name),
 		args: [{ type: 'single', const: true, tag: boolTag, name: initializerArg }],
 	};
 };

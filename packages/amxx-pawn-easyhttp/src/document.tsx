@@ -1,3 +1,4 @@
+import { snakeCase } from 'change-case';
 import { Declaration, Eol, Line } from './syntax/common';
 
 const logo = `/*
@@ -19,14 +20,15 @@ const logo = `/*
 `;
 
 export const Document: JSXTE.Component<{ name: string }> = ({ children, name }) => {
+	const includedKey = `_${snakeCase(name)}_included`;
 	return (
 		<Declaration>
 			{logo}
 			<Eol />
-			<Line>#if defined _{name}_included</Line>
+			<Line>#if defined {includedKey}</Line>
 			<Line>#endinput</Line>
 			<Line>#endif</Line>
-			<Line>#define _{name}_included</Line>
+			<Line>#define {includedKey}</Line>
 			<Eol />
 			<Line>{'#include <amxmodx>'}</Line>
 			<Line>{'#include <easy_http>'}</Line>

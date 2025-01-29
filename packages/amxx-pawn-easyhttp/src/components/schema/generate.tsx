@@ -15,8 +15,12 @@ import { BooleanSyntax } from './boolean';
 import { StringSyntax } from './string';
 import { generateObjectLiteral } from './object/literal';
 import { mapPrimitiveTypeToSyntax } from './primitives-map';
+import type { TagIdentifier } from '~/syntax/tags';
+import type { FuncIdentifier } from '~/syntax/function';
 
 export interface SchemaDeclaration {
+	tag?: TagIdentifier;
+	name?: FuncIdentifier;
 	prototype: JSX.Element;
 	implementation: JSX.Element;
 	dependencies?: SchemaDeclaration[];
@@ -25,8 +29,10 @@ export interface SchemaDeclaration {
 export interface GenerateSchemaArgs {
 	name: string;
 	schema: OpenAPIV3.SchemaObject;
-	resolveDependency: (schema: OpenAPIV3.SchemaObject) => SchemaDeclaration | null;
-	onDependencyResolved: (declaration: SchemaDeclaration, schema: OpenAPIV3.SchemaObject) => void;
+	resolveDependency: (schema: OpenAPIV3.SchemaObject, name: string) => {
+		declaration: SchemaDeclaration;
+		fromCache: boolean;
+	};
 }
 
 export type GenerateSchemaReturn = SchemaDeclaration;
@@ -35,10 +41,10 @@ export function generateSchema({
 	name,
 	schema,
 	resolveDependency,
-	onDependencyResolved,
 }: GenerateSchemaArgs) {
 	const noImplementation: GenerateSchemaReturn = {
-		implementation: `// [${name}] no implementation\n`, prototype: null,
+		implementation: `// [${name}] no implementation\n`,
+		prototype: null,
 	};
 
 	const generateMixedPrimitive = (...syntaxes: SyntaxContractForMixed[]) =>
@@ -72,11 +78,9 @@ export function generateSchema({
 		})
 		.with({ type: 'object' }, () => {
 			return generateObjectLiteral({
-				generateSchema,
 				name,
 				schema,
 				resolveDependency,
-				onDependencyResolved,
 			});
 		})
 		.otherwise(() => {

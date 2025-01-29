@@ -6,14 +6,12 @@ import type { GetOperatorProps, InitOperatorComponent } from '../../operators';
 import { Declaration, Eol, Statement } from '~/syntax/common';
 import { JsDoc } from '~/components/shared/jsdoc';
 import { If } from '~/syntax/if-else';
-import { codegenCtx } from '~/context';
+import { buildSchemaName } from '../../name';
 
 const getSchemaArgs = ({ name }: GetOperatorProps): BaseSchemaProtoProps => {
-	const { format } = codegenCtx.getOrFail();
-
 	return {
 		tag: numberTag,
-		identifier: format.toFunc(name),
+		identifier: buildSchemaName(name),
 		args: [{ type: 'mixed', const: true, tag: [intTag, floatTag], name: initializerArg }],
 	};
 };

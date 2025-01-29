@@ -1,11 +1,12 @@
-import { codegenCtx } from '~/context';
 import {
 	generateGlobalSchemas,
 	generateSchema,
 	GlobalDeclarations,
+	type GenerateSchemaArgs,
 	type SchemaDeclaration,
 } from './schema/generate';
 
+import { codegenCtx } from '~/context';
 import { Declaration, Eol } from '~/syntax/common';
 
 export function generateComponents() {
@@ -28,11 +29,26 @@ export function generateComponents() {
 
 	Object.entries(document.components?.schemas ?? {})
 		.forEach(([name, schema]) => {
+			const schemaName = `${name} schema`;
+
+			const resolveDependency: GenerateSchemaArgs['resolveDependency'] = (schema, name) => {
+				if (generatedSchemas.has(schema))
+					return { declaration: generatedSchemas.get(schema)!, fromCache: true };
+
+				const declaration = generateSchema({
+					schema,
+					name,
+					resolveDependency,
+				});
+
+				generatedSchemas.set(schema, declaration);
+				return { declaration, fromCache: false };
+			};
+
 			const declaration = generateSchema({
 				schema,
-				name: `${name} schema`,
-				resolveDependency: schema => generatedSchemas.get(schema) ?? null,
-				onDependencyResolved: (declaration, schema) => generatedSchemas.set(schema, declaration),
+				name: schemaName,
+				resolveDependency,
 			});
 
 			generatedSchemas.set(schema, declaration);

@@ -3,7 +3,8 @@ import type { GenerateMixedLiteralProps } from './literal';
 import { initializerArg } from '~/components/shared/primitives';
 import { Declaration, Statement } from '~/syntax/common';
 import { JsDoc } from '~/components/shared/jsdoc';
-import { codegenCtx } from '~/context';
+import { buildSchemaTag } from '../tag';
+import { buildSchemaName } from '../name';
 
 type InitOperatorComponentProps = Pick<GenerateMixedLiteralProps, 'name' | 'syntaxes' | 'jsDoc'>;
 type InitOperatorComponent = JSXTE.Component<InitOperatorComponentProps>;
@@ -11,11 +12,9 @@ type InitOperatorComponent = JSXTE.Component<InitOperatorComponentProps>;
 const getSchemaArgs = (
 	{ name, syntaxes }: Omit<InitOperatorComponentProps, 'jsDoc'>,
 ): BaseSchemaProtoProps => {
-	const { format } = codegenCtx.getOrFail();
-
 	return {
-		tag: format.toTag(name),
-		identifier: format.toFunc(name),
+		tag: buildSchemaTag(name),
+		identifier: buildSchemaName(name),
 		args: [{
 			type: 'mixed',
 			const: true,

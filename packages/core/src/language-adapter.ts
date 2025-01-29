@@ -19,34 +19,34 @@ export type ComponentReference = {
 	name: string;
 } & ({
 	type: typeof componentTypes[0];
-	value: OpenAPIV3.SchemaObject;
+	getOriginal: () => OpenAPIV3.SchemaObject;
 } | {
 	type: typeof componentTypes[1];
-	value: OpenAPIV3.ResponseObject;
+	getOriginal: () => OpenAPIV3.ResponseObject;
 } | {
 	type: typeof componentTypes[2];
-	value: OpenAPIV3.ParameterObject;
+	getOriginal: () => OpenAPIV3.ParameterObject;
 } | {
 	type: typeof componentTypes[3];
-	value: OpenAPIV3.ExampleObject;
+	getOriginal: () => OpenAPIV3.ExampleObject;
 } | {
 	type: typeof componentTypes[4];
-	value: OpenAPIV3.RequestBodyObject;
+	getOriginal: () => OpenAPIV3.RequestBodyObject;
 } | {
 	type: typeof componentTypes[5];
-	value: OpenAPIV3.HeaderObject;
+	getOriginal: () => OpenAPIV3.HeaderObject;
 } | {
 	type: typeof componentTypes[6];
-	value: OpenAPIV3.SecuritySchemeObject;
+	getOriginal: () => OpenAPIV3.SecuritySchemeObject;
 } | {
 	type: typeof componentTypes[7];
-	value: OpenAPIV3.LinkObject;
+	getOriginal: () => OpenAPIV3.LinkObject;
 } | {
 	type: typeof componentTypes[8];
-	value: OpenAPIV3.CallbackObject;
+	getOriginal: () => OpenAPIV3.CallbackObject;
 } | {
 	type: typeof componentTypes[9];
-	value: OpenAPIV3.PathItemObject;
+	getOriginal: () => OpenAPIV3.PathItemObject;
 });
 
 export interface CodegenApi {

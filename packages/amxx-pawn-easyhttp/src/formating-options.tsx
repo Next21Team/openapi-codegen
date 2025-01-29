@@ -13,7 +13,7 @@ export type Formatter = {
 	toTag: (...input: string[]) => TagIdentifier;
 	toFunc: (...input: string[]) => FuncIdentifier;
 	toVar: (...input: string[]) => VarIdentifier;
-	joinDomains: <Identifier extends PossibleIdentifiers>(input: Identifier[]) => Identifier;
+	joinDomains: <Identifier extends PossibleIdentifiers>(...input: Identifier[]) => Identifier;
 };
 
 const conventionTransformers = {
@@ -54,13 +54,21 @@ export const createFormatter = (config: FormattingConfig = {}): Formatter => {
 		domainSeparator = '__',
 	} = conventions;
 
+	const withDomainSplitting = <T extends string>(transformer: (input: string) => string) => (...input: string[]) => {
+		return input
+			.join(' ')
+			.split(domainSeparator)
+			.map(transformer)
+			.join(domainSeparator) as T;
+	};
+
 	return {
 		indentSymbol,
 		semicolon,
-		toTag: (...input) => conventionTransformers[tag](input.join(' ')) as TagIdentifier,
-		toVar: (...input) => conventionTransformers[variable](input.join(' ')) as VarIdentifier,
-		toFunc: (...input) => conventionTransformers[func](input.join(' ')) as FuncIdentifier,
-		joinDomains: <Identifier extends PossibleIdentifiers>(input: Identifier[]) => (
+		toTag: withDomainSplitting<TagIdentifier>(conventionTransformers[tag]),
+		toVar: withDomainSplitting<VarIdentifier>(conventionTransformers[variable]),
+		toFunc: withDomainSplitting<FuncIdentifier>(conventionTransformers[func]),
+		joinDomains: <Identifier extends PossibleIdentifiers>(...input: Identifier[]) => (
 			input.join(domainSeparator) as Identifier
 		),
 	};

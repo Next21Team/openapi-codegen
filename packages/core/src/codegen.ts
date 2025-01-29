@@ -30,11 +30,18 @@ export async function produce({ documentName, input, languageAdapter }: ProduceC
 			const type = z.enum(componentTypes).parse(rawCategory);
 			const name = ref.split('/').at(-1);
 
+			const getOriginal = () => {
+				const document = result.schema;
+				invariant(document && name);
+
+				return document.components?.[type]?.[name];
+			};
+
 			const componentReference = {
 				$ref: ref,
 				name,
 				type,
-				value: schema,
+				getOriginal,
 			} as ComponentReference;
 
 			resolvedSchemas.set(schema, componentReference);

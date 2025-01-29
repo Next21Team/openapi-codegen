@@ -66,14 +66,14 @@ const Prototype: JSXTE.Component<FunctionProps> = ({ identifier, tag, args = [],
 			))
 			.with({ type: 'macro' }, arg => arg.name)
 			.exhaustive(),
-		)
-		.join(', ');
+		);
 
 	return (
 		<Declaration>
 			{modifiers.join(' ')}
 			{' '}
-			{tag && `${tag}:`}{identifier}({formattedArgs})
+			{tag && `${tag}:`}{identifier}
+			<Declaration>({formattedArgs.join(', ')})</Declaration>
 		</Declaration>
 	);
 };

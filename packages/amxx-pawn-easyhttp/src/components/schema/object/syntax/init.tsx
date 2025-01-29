@@ -3,29 +3,49 @@ import { BaseSchemaDecl, BaseSchemaProto, type BaseSchemaProtoProps } from '../.
 import { argsCtx } from '../context';
 import { Declaration, Statement } from '~/syntax/common';
 import { JsDoc } from '~/components/shared/jsdoc';
-import { initializerArg } from '~/components/shared/primitives';
+import { undefinedLiteral, undefinedTag } from '~/components/shared/primitives';
 import { codegenCtx } from '~/context';
+import { buildSchemaName } from '../../name';
+import { buildSchemaTag } from '../../tag';
+import { prepareProperties } from '../properties';
 
 const getProtoProps = (ctx: ContextAccessor) => {
-	const { name } = ctx.getOrFail(argsCtx);
 	const { format } = codegenCtx.getOrFail();
+	const args = ctx.getOrFail(argsCtx);
+	const identifier = buildSchemaName(args.name);
 
 	return {
-		tag: format.toTag(name),
-		identifier: format.toFunc(name),
-		args: [],
+		tag: buildSchemaTag(args.name),
+		identifier,
+		args: prepareProperties(args).map(({ key, tag, required }) => ({
+			name: format.toVar(key),
+			const: true,
+			...(required ? {
+				type: 'single',
+				tag: tag,
+			} : {
+				type: 'mixed',
+				tag: [undefinedTag, tag],
+				equalTo: undefinedLiteral,
+			}),
+		})),
 	} satisfies BaseSchemaProtoProps;
 };
 
 export const InitOperatorProto: JSXTE.Component = (props, { ctx }) => {
 	const protoProps = getProtoProps(ctx);
-	const { schema } = ctx.getOrFail(argsCtx);
+	const args = ctx.getOrFail(argsCtx);
+	const properties = prepareProperties(args);
 
 	return (
 		<Declaration>
 			<JsDoc
-				description={schema.description}
-				deprecated={schema.deprecated}
+				description={args.schema.description}
+				deprecated={args.schema.deprecated}
+				args={properties.map(({ key, declaration }) => ({
+					name: key,
+					description: `Value of [${declaration?.name}]. ${args.schema.description}`,
+				}))}
 				returnExpr={`${protoProps.tag} schema`}
 			/>
 			<BaseSchemaProto {...protoProps} />
@@ -46,7 +66,8 @@ export const InitOperatorImpl: JSXTE.Component = (props, { ctx }) => {
 
 	return (
 		<BaseSchemaDecl {...protoProps}>
-			<Statement>return {protoProps.tag}:root({initializerArg})</Statement>
+			<Statement>new EzJSON:root = ezjson_init_object()</Statement>
+			<Statement>return {protoProps.tag}:root</Statement>
 		</BaseSchemaDecl>
 	);
 };

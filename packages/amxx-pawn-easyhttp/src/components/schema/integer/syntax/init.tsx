@@ -4,14 +4,12 @@ import { integerTag } from '../tag';
 import type { GetOperatorProps, InitOperatorComponent } from '../../operators';
 import { Declaration, Statement } from '~/syntax/common';
 import { JsDoc } from '~/components/shared/jsdoc';
-import { codegenCtx } from '~/context';
+import { buildSchemaName } from '../../name';
 
 const getSchemaArgs = ({ name }: GetOperatorProps): BaseSchemaProtoProps => {
-	const { format } = codegenCtx.getOrFail();
-
 	return {
 		tag: integerTag,
-		identifier: format.toFunc(name),
+		identifier: buildSchemaName(name),
 		args: [{ type: 'single', const: true, name: initializerArg }],
 	};
 };
